@@ -1,16 +1,16 @@
 package com.example.petshop.service;
 
+import com.example.petshop.PetWithStringImage;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.repository.PetRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -18,11 +18,16 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
-    public List<Pet> allPets() {
-        return petRepository.findAll();
+    public List<PetWithStringImage> allPets() {
+
+       return petRepository.findAll().stream().
+                map(PetWithStringImage::new)
+                .collect(Collectors.toList());
     }
 
-    public ObjectId createPet(Pet pet) {
+    public ObjectId createPet(PetWithStringImage petWithStringImage) {
+        Pet pet = new Pet(petWithStringImage);
+
         String invalidInputs = getInvalidInputs(pet);
         if (invalidInputs.isBlank()) {
             return petRepository.save(pet).getId();
@@ -45,6 +50,7 @@ public class PetService {
     }
 
     private String getInvalidInputs(Pet pet) {
+
         StringBuilder errors = new StringBuilder();
 
         if (pet.getName().length() < 3)
