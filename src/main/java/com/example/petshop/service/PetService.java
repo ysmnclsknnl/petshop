@@ -25,9 +25,7 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    public ObjectId createPet(PetWithStringImage petWithStringImage) {
-        Pet pet = new Pet(petWithStringImage);
-
+    public ObjectId createPet(Pet pet) {
         String invalidInputs = getInvalidInputs(pet);
         if (invalidInputs.isBlank()) {
             return petRepository.save(pet).getId();

@@ -10,7 +10,7 @@
     <h3>Add New Pet</h3>
     <hr/>
 
-    <form th:action="@{/pets/add}" th:object="${pet}" method="POST">
+    <form th:action="@{/pets/add}" th:object="${pet}" method="POST" enctype="multipart/form-data">
 
         <input type="text" th:field="*{name}" placeholder="Enter Name" />
 
@@ -23,28 +23,12 @@
             <option value="CAT">Cat</option>
         </select>
 
-        <input type="file" id="photoInput" accept="image/jpeg" />
-        <input type="hidden" th:field="*{photo}" id="photoData" />
+        <input type="file" th:name="photo" />
 
-        <button type="button" onclick="handleFileSelection()">Save</button>
+        <button type="submit">Save</button>
     </form>
     <hr/>
     <a th:href="@{/pets}">Back to pets</a>
 </div>
-
-<script th:inline="javascript">
-    function handleFileSelection() {
-        const fileInput = document.getElementById("photoInput");
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const photoDataInput = document.getElementById("photoData");
-            photoDataInput.value = e.target.result;
-            const form = document.getElementsByTagName("form")[0];
-            form.submit();
-        };
-        reader.readAsBinaryString(file);
-    }
-</script>
 </body>
 </html>

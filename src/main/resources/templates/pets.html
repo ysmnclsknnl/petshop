@@ -10,7 +10,7 @@
     <h4>Pet Shop</h4>
     <h3>Pets</h3>
 
-    <a href="/addPetForm" class="btn btn-primary">Add Pet</a>
+    <a href="/pets/add">Add Pet</a>
 
     <hr/>
 
@@ -19,7 +19,7 @@
         <p>Description: <span th:text="${pet.description}"></span></p>
         <p>Age: <span th:text="${pet.age}"></span></p>
         <p>Type: <span th:text="${pet.type}"></span></p>
-
+        <img th:src="|data:image/jpeg;base64,${pet.photo}|"/>
         <form th:action="@{/pets/{id}(id=${pet.id})}" method="post">
             <input type="hidden" name="_method" value="patch" />
             <button type="submit">Adopt</button>

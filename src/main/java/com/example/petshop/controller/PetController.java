@@ -1,12 +1,18 @@
 package com.example.petshop.controller;
 
+import com.example.petshop.PetWithStringImage;
+import com.example.petshop.SuperPet;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.util.Base64;
 import java.util.NoSuchElementException;
 
 
@@ -40,10 +46,17 @@ public class PetController {
     }
 
     @PostMapping("/add")
-      public String createPet(@ModelAttribute Pet pet) {
-        createPet(pet);
+      public String createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
 
-        return "redirect:/pets";
+            try {
+                Pet pet = new Pet(superPet, photo);
+               return petService.createPet(pet).toHexString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        return "Error";
     }
 
     @PatchMapping("/{id}")
