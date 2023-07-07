@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    background-color: bisque;
+    font-family: "Comic Sans MS";
+    border: black solid 3rem;
+}
+
+.pet-container {
+    border: 1px solid blue;
+    padding: 10px;
+    margin-bottom: 10px;
+}

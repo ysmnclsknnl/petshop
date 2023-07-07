@@ -1,0 +1,50 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add Pet</title>
+</head>
+<body>
+
+<div class="container">
+
+    <h3>Add New Pet</h3>
+    <hr/>
+
+    <form th:action="@{/pets/add}" th:object="${pet}" method="POST">
+
+        <input type="text" th:field="*{name}" placeholder="Enter Name" />
+
+        <input type="text" th:field="*{description}"  placeholder="Enter Description" />
+
+        <input type="text" th:field="*{age}" placeholder="Enter Age" />
+
+        <select th:field="*{type}">
+            <option value="DOG">Dog</option>
+            <option value="CAT">Cat</option>
+        </select>
+
+        <input type="file" id="photoInput" accept="image/jpeg" />
+        <input type="hidden" th:field="*{photo}" id="photoData" />
+
+        <button type="button" onclick="handleFileSelection()">Save</button>
+    </form>
+    <hr/>
+    <a th:href="@{/pets}">Back to pets</a>
+</div>
+
+<script th:inline="javascript">
+    function handleFileSelection() {
+        const fileInput = document.getElementById("photoInput");
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const photoDataInput = document.getElementById("photoData");
+            photoDataInput.value = e.target.result;
+            const form = document.getElementsByTagName("form")[0];
+            form.submit();
+        };
+        reader.readAsBinaryString(file);
+    }
+</script>
+</body>
+</html>

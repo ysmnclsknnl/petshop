@@ -21,7 +21,7 @@ public class PetDataSeeder {
     }
 
     public void seedData() {
-        IntStream.range(0, 10)
+        IntStream.range(0, 1)
                 .mapToObj(i -> {
                     Pet pet = new Pet();
                     pet.setId(new ObjectId());
@@ -38,7 +38,7 @@ public class PetDataSeeder {
 
     private byte[] generateFakePhoto() {
         int maxSize = 100 * 1024;
-        byte[] photoData = new byte[maxSize]; // Adjust the size as per your requirements
+        byte[] photoData = new byte[maxSize];
 
         new Random().nextBytes(photoData);
 

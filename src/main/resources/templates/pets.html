@@ -1,0 +1,32 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Pet Shop</title>
+</head>
+<body>
+
+<div class="container">
+
+    <h4>Pet Shop</h4>
+    <h3>Pets</h3>
+
+    <a href="/addPetForm" class="btn btn-primary">Add Pet</a>
+
+    <hr/>
+
+    <div th:each="pet: ${pets}" class="pet-container">
+        <p>Name: <span th:text="${pet.name}"></span></p>
+        <p>Description: <span th:text="${pet.description}"></span></p>
+        <p>Age: <span th:text="${pet.age}"></span></p>
+        <p>Type: <span th:text="${pet.type}"></span></p>
+
+        <form th:action="@{/pets/{id}(id=${pet.id})}" method="post">
+            <input type="hidden" name="_method" value="patch" />
+            <button type="submit">Adopt</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
