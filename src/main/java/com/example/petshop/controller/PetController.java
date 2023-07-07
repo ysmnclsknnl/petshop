@@ -1,13 +1,17 @@
 package com.example.petshop.controller;
 
+import com.example.petshop.PetWithStringImage;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -19,18 +23,18 @@ public class PetController {
     private PetService petService;
 
     @GetMapping
-    public ResponseEntity<?> getAllPets() {
+    public ResponseEntity<List<PetWithStringImage>> getAllPets() {
         try {
             return new ResponseEntity<>(petService.allPets(), HttpStatus.OK);
         } catch (Exception error) {
 
             String errorMessage = "An error occurred while retrieving pets.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
         }
     }
 
     @PostMapping("/create")
-      public ResponseEntity<?> createPet(@RequestBody Pet pet) {
+      public ResponseEntity<String> createPet(@RequestBody PetWithStringImage pet) {
 
         try {
 
@@ -40,23 +44,24 @@ public class PetController {
         } catch (Exception ex) {
 
             if(ex instanceof IllegalArgumentException) {
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
             }
 
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
         }
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> adoptPet(@PathVariable ObjectId id) {
+    public ResponseEntity<Pet> adoptPet(@PathVariable ObjectId id) {
         try {
             return new ResponseEntity<>(petService.adoptPet(id), HttpStatus.OK);
         } catch (Exception ex) {
             if (ex instanceof IllegalArgumentException || ex  instanceof NoSuchElementException) {
 
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
             } else {
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+
             }
         }
     }
