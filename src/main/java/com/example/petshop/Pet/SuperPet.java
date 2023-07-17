@@ -1,5 +1,6 @@
-package com.example.petshop;
+package com.example.petshop.Pet;
 
+import com.example.petshop.Type;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
