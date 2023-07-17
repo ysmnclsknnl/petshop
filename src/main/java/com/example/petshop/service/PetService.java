@@ -20,8 +20,9 @@ public class PetService {
 
     public List<PetWithStringImage> allPets() {
 
-       return petRepository.findAll().stream().
-                map(PetWithStringImage::new)
+        return petRepository.findAll().stream()
+                .map(PetWithStringImage::new)
+                .sorted(PetWithStringImage::compareTo)
                 .collect(Collectors.toList());
     }
 
