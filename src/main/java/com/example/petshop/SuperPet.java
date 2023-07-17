@@ -20,4 +20,12 @@ public class SuperPet {
     private Integer age;
     private Type type;
     private Boolean adopted = false;
+
+    public SuperPet(String name, String description, Integer age, Type type, Boolean adopted) {
+        this.name = name;
+        this.description = description;
+        this.age = age;
+        this.type = type;
+        this.adopted = adopted;
+    }
 }
