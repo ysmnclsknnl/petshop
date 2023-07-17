@@ -1,10 +1,14 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <link rel="stylesheet" href="/index.css">
     <title>Pet Shop</title>
 </head>
 <body>
+<h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 <h4>Pet Shop</h4>
 <h3>Pets</h3>
 <div class="container">
