@@ -36,6 +36,7 @@ public class PetController {
         ModelAndView mav = new ModelAndView("add-pet-form");
         Pet newPet = new Pet();
         mav.addObject("pet", newPet);
+
         return mav;
     }
 
@@ -68,6 +69,7 @@ public class PetController {
             mav.addObject("errorMsg", ex.getMessage());
             mav.setViewName("error");
         }
+
         return mav;
     }
 }
