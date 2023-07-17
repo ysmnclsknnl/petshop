@@ -1,69 +1,73 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.PetWithStringImage;
+import com.example.petshop.SuperPet;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/api/pets")
+@RequestMapping("/pets")
 public class PetController {
 
     @Autowired
     private PetService petService;
 
     @GetMapping
-    public ResponseEntity<List<PetWithStringImage>> getAllPets() {
+    public ModelAndView getAllPets() {
+        ModelAndView petsModelAndView = new ModelAndView();
+
         try {
-            return new ResponseEntity<>(petService.allPets(), HttpStatus.OK);
+            petsModelAndView.addObject("pets", petService.allPets());
+            petsModelAndView.setViewName("pets");
         } catch (Exception error) {
-
-            String errorMessage = "An error occurred while retrieving pets.";
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+            petsModelAndView.addObject("error", "An error occurred while retrieving pets.");
+            petsModelAndView.setViewName("error");
         }
+
+        return petsModelAndView;
     }
 
-    @PostMapping("/create")
-      public ResponseEntity<String> createPet(@RequestBody PetWithStringImage pet) {
-
-        try {
-
-            String createdPetId = petService.createPet(pet).toHexString();
-
-            return new ResponseEntity<>(createdPetId, HttpStatus.CREATED);
-        } catch (Exception ex) {
-
-            if(ex instanceof IllegalArgumentException) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-            }
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-        }
+    @GetMapping("/add")
+    public ModelAndView addPetForm() {
+        ModelAndView mav = new ModelAndView("add-pet-form");
+        Pet newPet = new Pet();
+        mav.addObject("pet", newPet);
+        return mav;
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Pet> adoptPet(@PathVariable ObjectId id) {
+    @PostMapping("/add")
+    public ModelAndView createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
+        ModelAndView mav = new ModelAndView();
+
         try {
-            return new ResponseEntity<>(petService.adoptPet(id), HttpStatus.OK);
-        } catch (Exception ex) {
-            if (ex instanceof IllegalArgumentException || ex  instanceof NoSuchElementException) {
+            Pet pet = new Pet(superPet, photo);
+            String petId = petService.createPet(pet).toHexString();
+            mav.addObject("successMsg", "Pet is added successfully with id: " + petId);
+            mav.setViewName("success");
 
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-            } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
-
-            }
+        } catch (Exception e) {
+            mav.addObject("errorMsg", e.getMessage());
+            mav.setViewName("error");
         }
+
+        return mav;
+    }
+
+    @PostMapping("/{id}")
+    public ModelAndView adoptPet(@PathVariable ObjectId id) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            String petName = petService.adoptPet(id).getName();
+            mav.addObject("successMsg", "You adopted " + petName + "!");
+            mav.setViewName("success");
+        } catch (Exception ex) {
+            mav.addObject("errorMsg", ex.getMessage());
+            mav.setViewName("error");
+        }
+        return mav;
     }
 }
-
