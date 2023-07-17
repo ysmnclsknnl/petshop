@@ -1,19 +1,13 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.PetWithStringImage;
 import com.example.petshop.SuperPet;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.IOException;
-import java.util.Base64;
-import java.util.NoSuchElementException;
 
 
 @RestController
@@ -30,9 +24,8 @@ public class PetController {
         try {
             petsModelAndView.addObject("pets", petService.allPets());
         } catch (Exception error) {
-            petsModelAndView.addObject("error","An error occurred while retrieving pets.");
-        }
-        finally {
+            petsModelAndView.addObject("error", "An error occurred while retrieving pets.");
+        } finally {
             return petsModelAndView;
         }
     }
@@ -46,23 +39,26 @@ public class PetController {
     }
 
     @PostMapping("/add")
-      public String createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
+    public String createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
 
-            try {
-                Pet pet = new Pet(superPet, photo);
-               return petService.createPet(pet).toHexString();
+        try {
+            Pet pet = new Pet(superPet, photo);
+            return petService.createPet(pet).toHexString();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return "Error";
     }
 
-    @PatchMapping("/{id}")
-    public String adoptPet(@PathVariable ObjectId id) {
-        petService.adoptPet(id);
-        return "redirect:/pets";
+    @PostMapping("/{id}")
+    public String adoptPet(@PathVariable ObjectId id) throws Exception {
+        try {
+            return  "You adopted " + petService.adoptPet(id).getName() +"!";
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception(ex);
+        }
     }
 }
-

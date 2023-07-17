@@ -32,6 +32,7 @@ public class PetWithStringImage {
             this.description = pet.getDescription();
             this.age = pet.getAge();
             this.type = pet.getType();
+            this.adopted = pet.getAdopted();
             this.photo = Base64.getEncoder().encodeToString(pet.getPhoto().getData());
     }
 }

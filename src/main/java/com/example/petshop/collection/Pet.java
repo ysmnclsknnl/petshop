@@ -48,6 +48,7 @@ public class Pet  {
         this.description = superPet.getDescription();
         this.age = superPet.getAge();
         this.type = superPet.getType();
+        this.adopted = false;
         if (!photo.isEmpty()) {
             byte[] photoBytes = photo.getBytes();
                 String base64String = Base64.getEncoder().encodeToString(photoBytes);

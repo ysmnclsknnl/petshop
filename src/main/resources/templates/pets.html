@@ -1,32 +1,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <link rel="stylesheet" href="/index.css">
     <title>Pet Shop</title>
 </head>
 <body>
-
+<h4>Pet Shop</h4>
+<h3>Pets</h3>
 <div class="container">
-
-    <h4>Pet Shop</h4>
-    <h3>Pets</h3>
-
-    <a href="/pets/add">Add Pet</a>
-
-    <hr/>
-
+    <div><a href="/pets/add">Add Pet</a> </div>
+    <section class="pets-container">
     <div th:each="pet: ${pets}" class="pet-container">
         <p>Name: <span th:text="${pet.name}"></span></p>
         <p>Description: <span th:text="${pet.description}"></span></p>
         <p>Age: <span th:text="${pet.age}"></span></p>
         <p>Type: <span th:text="${pet.type}"></span></p>
+        <p>Adopted: <span th:text="${pet.adopted}"></span></p>
         <img th:src="|data:image/jpeg;base64,${pet.photo}|"/>
         <form th:action="@{/pets/{id}(id=${pet.id})}" method="post">
-            <input type="hidden" name="_method" value="patch" />
-            <button type="submit">Adopt</button>
+            <input type="hidden" th:name="id" th:value="${pet.id}" />
+            <button type="submit" th:hidden="${pet.adopted}">Adopt</button>
         </form>
     </div>
-
+    </section>
 </div>
+
 
 </body>
 </html>

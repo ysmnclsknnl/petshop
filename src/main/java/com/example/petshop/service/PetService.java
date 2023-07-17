@@ -38,12 +38,13 @@ public class PetService {
         Optional<Pet> optionalPet = petRepository.findById(petId);
         Pet pet = optionalPet.orElseThrow(() -> new NoSuchElementException("Pet not found with ID: " + petId));
 
-        if (pet.getAdopted()) {
+        if (pet.getAdopted() == true) {
             throw new IllegalArgumentException("Pet with ID: " + petId + " is already adopted.");
         }
-
-        pet.setAdopted(true);
-        return petRepository.save(pet);
+        else {
+            pet.setAdopted(true);
+            return petRepository.save(pet);
+        }
 
     }
 
