@@ -21,7 +21,7 @@ public class PetService {
     }
 
     public List<PetWithStringImage> allPets() {
-        List<Pet> notAdoptedPets = petRepository.findByAdopted(false, Sort.by(Sort.Direction.DESC, "id.timestamp"));
+        List<Pet> notAdoptedPets = petRepository.findByAdopted(false, Sort.by(Sort.Direction.ASC, "id.timestamp"));
 
         return notAdoptedPets.stream()
                 .map(PetWithStringImage::new)
