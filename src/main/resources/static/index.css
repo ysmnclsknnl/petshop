@@ -2,11 +2,13 @@
     max-width: 900px;
     height: 100vh;
 }
+
 .container {
     background-color: bisque;
     font-family: "Comic Sans MS";
     border: black solid 1rem;
 }
+
 .pets-container {
     background-color: bisque;
     font-family: "Comic Sans MS";
@@ -15,10 +17,9 @@
 
 .pet-container {
     width: 15rem;
-    margin: 1.5rem;
     display: flex;
     flex-direction: column;
     border: 2px solid blue;
     padding: 10px;
-    margin-bottom: 10px;
+    margin: 1.5rem 1.5rem 10px;
 }

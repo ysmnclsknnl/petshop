@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @RestController
 @RequestMapping("/pets")
 public class PetController {
@@ -23,11 +22,13 @@ public class PetController {
 
         try {
             petsModelAndView.addObject("pets", petService.allPets());
+            petsModelAndView.setViewName("pets");
         } catch (Exception error) {
             petsModelAndView.addObject("error", "An error occurred while retrieving pets.");
-        } finally {
-            return petsModelAndView;
+            petsModelAndView.setViewName("error");
         }
+
+        return petsModelAndView;
     }
 
     @GetMapping("/add")
@@ -39,26 +40,34 @@ public class PetController {
     }
 
     @PostMapping("/add")
-    public String createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
+    public ModelAndView createPet(@ModelAttribute SuperPet superPet, @RequestParam("photo") MultipartFile photo) {
+        ModelAndView mav = new ModelAndView();
 
         try {
             Pet pet = new Pet(superPet, photo);
-            return petService.createPet(pet).toHexString();
+            String petId = petService.createPet(pet).toHexString();
+            mav.addObject("successMsg", "Pet is added successfully with id: " + petId);
+            mav.setViewName("success");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            mav.addObject("errorMsg", e.getMessage());
+            mav.setViewName("error");
         }
 
-        return "Error";
+        return mav;
     }
 
     @PostMapping("/{id}")
-    public String adoptPet(@PathVariable ObjectId id) throws Exception {
+    public ModelAndView adoptPet(@PathVariable ObjectId id) {
+        ModelAndView mav = new ModelAndView();
         try {
-            return  "You adopted " + petService.adoptPet(id).getName() +"!";
+            String petName = petService.adoptPet(id).getName();
+            mav.addObject("successMsg", "You adopted " + petName + "!");
+            mav.setViewName("success");
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Exception(ex);
+            mav.addObject("errorMsg", ex.getMessage());
+            mav.setViewName("error");
         }
+        return mav;
     }
 }

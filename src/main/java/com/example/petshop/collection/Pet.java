@@ -23,7 +23,7 @@ import java.util.Base64;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "pet")
-public class Pet  {
+public class Pet {
     @Id
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
@@ -35,14 +35,6 @@ public class Pet  {
     @JsonDeserialize(using = BinaryDeserializer.class)
     private Binary photo;
 
-    public Pet(String name, String description, Integer age, Type type, Binary photo) {
-        this.name = name;
-        this.description = description;
-        this.age = age;
-        this.type = type;
-        this.photo = photo;
-    }
-
     public Pet(SuperPet superPet, MultipartFile photo) throws IOException {
         this.name = superPet.getName();
         this.description = superPet.getDescription();
@@ -51,13 +43,14 @@ public class Pet  {
         this.adopted = false;
         if (!photo.isEmpty()) {
             byte[] photoBytes = photo.getBytes();
-                String base64String = Base64.getEncoder().encodeToString(photoBytes);
-                byte[] binaryData = Base64.getDecoder().decode(base64String);
-                this.setPhoto(new Binary(binaryData));
-            } else {
+            String base64String = Base64.getEncoder().encodeToString(photoBytes);
+            byte[] binaryData = Base64.getDecoder().decode(base64String);
+            this.setPhoto(new Binary(binaryData));
+        } else {
             throw new IllegalArgumentException("You should load a photo");
         }
     }
+
     public Pet(PetWithStringImage pet) {
         byte[] binaryData = Base64.getDecoder().decode(pet.getPhoto());
         this.name = pet.getName();
