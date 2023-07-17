@@ -14,24 +14,11 @@ import java.util.Base64;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetWithStringImage implements Comparable<PetWithStringImage> {
-    @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
-    private ObjectId id;
-    private String name;
-    private String description;
-    private Integer age;
-    private Type type;
-    private Boolean adopted = false;
+public class PetWithStringImage extends SuperPet implements Comparable<PetWithStringImage> {
     private String photo;
 
     public PetWithStringImage(Pet pet) {
-        this.id = pet.getId();
-        this.name = pet.getName();
-        this.description = pet.getDescription();
-        this.age = pet.getAge();
-        this.type = pet.getType();
-        this.adopted = pet.getAdopted();
+        super(pet.getId(), pet.getName(),pet.getDescription(),pet.getAge(),pet.getType(),pet.getAdopted());
         this.photo = Base64.getEncoder().encodeToString(pet.getPhoto().getData());
     }
 
