@@ -1,6 +1,6 @@
 package com.example.petshop.service;
 
-import com.example.petshop.PetWithStringImage;
+import com.example.petshop.Pet.PetWithStringImage;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.repository.PetRepository;
 import org.bson.types.ObjectId;

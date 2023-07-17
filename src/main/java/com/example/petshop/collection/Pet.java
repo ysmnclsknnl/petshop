@@ -1,6 +1,6 @@
 package com.example.petshop.collection;
 
-import com.example.petshop.SuperPet;
+import com.example.petshop.Pet.SuperPet;
 import com.example.petshop.serializer.BinaryDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;

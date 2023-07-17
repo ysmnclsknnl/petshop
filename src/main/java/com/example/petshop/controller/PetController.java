@@ -1,6 +1,6 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.SuperPet;
+import com.example.petshop.Pet.SuperPet;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;

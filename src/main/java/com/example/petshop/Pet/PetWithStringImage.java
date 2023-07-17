@@ -1,13 +1,9 @@
-package com.example.petshop;
+package com.example.petshop.Pet;
 
 import com.example.petshop.collection.Pet;
-import com.example.petshop.serializer.ObjectIdSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
 import java.util.Base64;
 
