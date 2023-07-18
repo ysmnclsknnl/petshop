@@ -9,11 +9,13 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 @Data
-@AllArgsConstructor
+@AllArgsConstructor //why custom constructor + annotation?
 @NoArgsConstructor
+//move to appropriate package
+// why a super pet class, probably better to use an interface?
 public class SuperPet {
     @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
+    @JsonSerialize(using = ObjectIdSerializer.class) // nice, but you could also just use the string here and solve this in your mapping
     private ObjectId id;
     private String name;
     private String description;
