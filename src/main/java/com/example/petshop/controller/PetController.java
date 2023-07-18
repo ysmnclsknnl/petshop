@@ -13,17 +13,19 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/pets")
 public class PetController {
 
-    @Autowired
+    @Autowired //don't use autowired annotation in production code
     private PetService petService;
 
     @GetMapping
     public ModelAndView getAllPets() {
-        ModelAndView petsModelAndView = new ModelAndView();
+        ModelAndView petsModelAndView = new ModelAndView(); //code can be made simpler using constructor and directly returning the values
 
         try {
             petsModelAndView.addObject("pets", petService.allPets());
             petsModelAndView.setViewName("pets");
         } catch (Exception error) {
+            //error does not describe whats wrong
+            // use constants
             petsModelAndView.addObject("error", "An error occurred while retrieving pets.");
             petsModelAndView.setViewName("error");
         }
@@ -46,7 +48,7 @@ public class PetController {
 
         try {
             Pet pet = new Pet(superPet, photo);
-            String petId = petService.createPet(pet).toHexString();
+            String petId = petService.createPet(pet).toHexString();//consider keeping your controller clean, with only code specific to the controller
             mav.addObject("successMsg", "Pet is added successfully with id: " + petId);
             mav.setViewName("success");
 

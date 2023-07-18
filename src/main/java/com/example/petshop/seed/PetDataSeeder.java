@@ -7,8 +7,8 @@ import net.datafaker.Faker;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
@@ -24,12 +24,12 @@ public class PetDataSeeder {
         Faker faker = new Faker();
         List<Pet> pets = IntStream.range(0, 5)
                 .mapToObj(i -> createPet(faker))
-                .collect(Collectors.toList());
+                .toList();
 
         petRepository.saveAll(pets);
     }
     private Pet createPet(Faker faker) {
-        Pet pet = new Pet();
+        Pet pet = new Pet();//try to avoid unnecessary setter calls, this could be done with a constructor
         pet.setName(faker.cat().name());
         pet.setDescription("Lovely pet. Enjoys playing with its owner.");
         pet.setAge(faker.number().numberBetween(0, 10));

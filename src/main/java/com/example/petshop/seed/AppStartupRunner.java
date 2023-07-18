@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class AppStartupRunner implements CommandLineRunner {
     private final PetDataSeeder petDataSeeder;
 
+    // why a separate app runner?
     public AppStartupRunner(PetDataSeeder petDataSeeder) {
         this.petDataSeeder = petDataSeeder;
     }

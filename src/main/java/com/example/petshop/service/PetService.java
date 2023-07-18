@@ -5,10 +5,10 @@ import com.example.petshop.collection.Pet;
 import com.example.petshop.repository.PetRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -23,11 +23,11 @@ public class PetService {
         return petRepository.findAll().stream()
                 .map(PetWithStringImage::new)
                 .sorted(PetWithStringImage::compareTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ObjectId createPet(Pet pet) {
-        String invalidInputs = getInvalidInputs(pet);
+        String invalidInputs = getInvalidInputs(pet); //this part can be cleaner/easier to read
         if (invalidInputs.isBlank()) {
             return petRepository.save(pet).getId();
         }
@@ -39,7 +39,7 @@ public class PetService {
         Optional<Pet> optionalPet = petRepository.findById(petId);
         Pet pet = optionalPet.orElseThrow(() -> new NoSuchElementException("Pet not found with ID: " + petId));
 
-        if (pet.getAdopted()) {
+        if (Boolean.TRUE.equals(pet.getAdopted())) {
             throw new IllegalArgumentException("Pet with ID: " + petId + " is already adopted.");
         } else {
             pet.setAdopted(true);

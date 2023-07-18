@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class BinaryDeserializer extends StdDeserializer<Binary> {
+    //unused code
     public BinaryDeserializer() {
         this(null);
     }

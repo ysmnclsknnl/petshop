@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "spring.data.mongodb")
+@ConfigurationProperties(prefix = "spring.data.mongodb") //cleanup?
 public class MongoProperties {
     private String database;
     private String uri;
