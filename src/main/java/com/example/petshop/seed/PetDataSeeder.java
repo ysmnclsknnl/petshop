@@ -1,6 +1,6 @@
 package com.example.petshop.seed;
 
-import com.example.petshop.Type;
+import com.example.petshop.dto.Type;
 import com.example.petshop.collection.Pet;
 import com.example.petshop.repository.PetRepository;
 import net.datafaker.Faker;
@@ -29,14 +29,14 @@ public class PetDataSeeder {
         petRepository.saveAll(pets);
     }
     private Pet createPet(Faker faker) {
-        Pet pet = new Pet();//try to avoid unnecessary setter calls, this could be done with a constructor
-        pet.setName(faker.cat().name());
-        pet.setDescription("Lovely pet. Enjoys playing with its owner.");
-        pet.setAge(faker.number().numberBetween(0, 10));
-        pet.setType(Type.CAT);
-        pet.setAdopted(faker.bool().bool());
-        pet.setPhoto(new Binary(faker.photography().camera().getBytes()));
-        return pet;
+         return new Pet(
+                faker.cat().name(),
+                "Lovely pet. Enjoys playing with its owner.",
+                faker.number().numberBetween(0, 10),
+                Type.CAT,
+                faker.bool().bool(),
+                new Binary(faker.photography().camera().getBytes())
+         );
     }
 }
 
