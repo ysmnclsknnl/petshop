@@ -5,6 +5,7 @@ import com.example.petshop.collection.Pet;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +16,7 @@ public class PetController {
 
     @Autowired
     private PetService petService;
+
 
     @GetMapping
     public ModelAndView getAllPets() {
