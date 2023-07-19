@@ -1,6 +1,5 @@
 package com.example.petshop.collection;
 
-import com.example.petshop.User.Role;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -26,9 +26,9 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
-    private Role role;
+    private String role;
 
-    public User(String name, String email, String password, Role role) {
+    public User(String name, String email, String password, String role) {
     this.name = name;
     this.email = email;
     this.password = password;
@@ -37,7 +37,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.EMPTY_LIST;
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.getRole()));
     }
 
     @Override
