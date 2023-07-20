@@ -1,6 +1,5 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.collection.Pet;
 import com.example.petshop.collection.User;
 import com.example.petshop.dto.LoginDTO;
 import com.example.petshop.dto.SignupDTO;
@@ -39,40 +38,18 @@ public class AuthController {
     UserDetailsManager userDetailsManager;
 
     @PostMapping("/register")
-    public ModelAndView register(@ModelAttribute SignupDTO signupDTO, HttpServletResponse response) {
-        User user = new User(signupDTO.getUserName(), signupDTO.getEmail(), signupDTO.getPassword(), "CUSTOMER");
+    public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
+        User user = new User(signupDTO.getUserName(), signupDTO.getEmail(), signupDTO.getPassword(), signupDTO.getRole().name());
         userDetailsManager.createUser(user);
 
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, user.getPassword(),  Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
 
-        TokenDTO token = tokenGenerator.createToken(authentication);
-        response.setHeader("Authorization", "Bearer " + token.getAccessToken());
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/auth/setToken/" + token.getAccessToken());
-//        modelAndView.setViewName("redirect:/pets");
-        return modelAndView;
-    }
-    @GetMapping("/setToken/{token}")
-    public ModelAndView setToken(@PathVariable("token") String token, HttpServletRequest request) {
-        // Store the token into the session
-        request.getSession().setAttribute("token", token);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/pets");
-        return modelAndView;
-    }
-
-
-    @GetMapping("/login")
-    public ModelAndView loginForm() {
-       return new ModelAndView("login", Collections.singletonMap("user", new SignupDTO()));
+        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@ModelAttribute SignupDTO user) {
-        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+    public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
+        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getEmail(), loginDTO.getPassword()));
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
