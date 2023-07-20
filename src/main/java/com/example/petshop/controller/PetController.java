@@ -1,5 +1,6 @@
 package com.example.petshop.controller;
 
+import com.example.petshop.dto.CreatePetDTO;
 import com.example.petshop.dto.PetDTO;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
@@ -28,16 +29,31 @@ public class PetController {
         }
     }
 
-    @GetMapping("/add")
-    public ModelAndView addPetForm() {
-        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
-    }
+//    @GetMapping("/add")
+//    public ModelAndView addPetForm() {
+//        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
+//    }
 
-    @PostMapping("/add")
+ /*   @PostMapping("/add")
     public ModelAndView createPet(@ModelAttribute PetDTO petDTO, @RequestParam("petImage") MultipartFile image) {
 
         try {
             String petId = petService.createPet(petDTO, image);
+
+            return new ModelAndView(
+                    "success",
+                    Collections.singletonMap("successMsg", "Pet is added successfully with id: " + petId )
+            );
+        } catch (Exception e) {
+
+            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+        }
+    }*/
+    @PostMapping("/add")
+    public ModelAndView createPet(CreatePetDTO petDTO ) {
+
+        try {
+            String petId = petService.createPet(petDTO);
 
             return new ModelAndView(
                     "success",
