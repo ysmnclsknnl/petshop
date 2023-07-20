@@ -1,5 +1,7 @@
 package com.example.petshop.collection;
 
+import com.example.petshop.dto.CreatePetDTO;
+import com.example.petshop.dto.PetDTO;
 import com.example.petshop.dto.Type;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,6 +12,8 @@ import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Base64;
 
 @Data
 @AllArgsConstructor
@@ -35,5 +39,14 @@ public class Pet {
         this.adopted = adopted;
         this.photo = photo;
     }
+    public static Pet from(CreatePetDTO pet) {
+        byte[] binaryData = Base64.getDecoder().decode(pet.getPhoto());
+        return new Pet(pet.getName(), pet.getDescription() ,pet.getAge(), pet.getType(), false, new Binary(binaryData));
 
+//        this.name = pet.getName();
+//        this.description = pet.getDescription();
+//        this.age = pet.getAge();
+//        this.type = pet.getType();
+//        this.photo = new Binary(binaryData);
+    }
 }
