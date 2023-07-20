@@ -1,80 +1,94 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.collection.Pet;
 import com.example.petshop.collection.User;
 import com.example.petshop.dto.LoginDTO;
 import com.example.petshop.dto.SignupDTO;
 import com.example.petshop.dto.TokenDTO;
 import com.example.petshop.security.TokenGenerator;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.petshop.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
+    final
     TokenGenerator tokenGenerator;
-    @Autowired
+    final
     DaoAuthenticationProvider daoAuthenticationProvider;
-    @Autowired
-    @Qualifier("jwtRefreshTokenAuthProvider")
+    final
     JwtAuthenticationProvider refreshTokenAuthProvider;
-    @Autowired
-    UserDetailsManager userDetailsManager;
+
+    final
+    UserService userDetailsManager;
+
+    public AuthController(TokenGenerator tokenGenerator, DaoAuthenticationProvider daoAuthenticationProvider, @Qualifier("jwtRefreshTokenAuthProvider") JwtAuthenticationProvider refreshTokenAuthProvider, UserService userDetailsManager) {
+        this.tokenGenerator = tokenGenerator;
+        this.daoAuthenticationProvider = daoAuthenticationProvider;
+        this.refreshTokenAuthProvider = refreshTokenAuthProvider;
+        this.userDetailsManager = userDetailsManager;
+    }
 
     @PostMapping("/register")
-    public ModelAndView register(@ModelAttribute SignupDTO signupDTO, HttpServletResponse response) {
-        User user = new User(signupDTO.getUserName(), signupDTO.getEmail(), signupDTO.getPassword(), "CUSTOMER");
-        userDetailsManager.createUser(user);
+    public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
+        try {
 
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, user.getPassword(),  Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            String errors = UserService.validateUser(signupDTO);
+            if (!errors.isBlank()) {
+                throw new IllegalArgumentException(errors);
+            }
 
-        TokenDTO token = tokenGenerator.createToken(authentication);
-        response.setHeader("Authorization", "Bearer " + token.getAccessToken());
+            User user = new User(signupDTO.getUserName(), signupDTO.getEmail(), signupDTO.getPassword(), signupDTO.getRole());
+            userDetailsManager.createUser(user);
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/auth/setToken/" + token.getAccessToken());
-//        modelAndView.setViewName("redirect:/pets");
-        return modelAndView;
+            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
+                    user,
+                    signupDTO.getPassword(),
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+            );
+
+            return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        } catch (Exception ex) {
+            if (ex instanceof IllegalArgumentException) {
+
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+
+            }
+        }
     }
-    @GetMapping("/setToken/{token}")
-    public ModelAndView setToken(@PathVariable("token") String token, HttpServletRequest request) {
-        // Store the token into the session
-        request.getSession().setAttribute("token", token);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/pets");
-        return modelAndView;
-    }
-
-
-    @GetMapping("/login")
-    public ModelAndView loginForm() {
-       return new ModelAndView("login", Collections.singletonMap("user", new SignupDTO()));
-    }
+  /*  @GetMapping("/register")
+  public ModelAndView addLoginForm() {
+     return new ModelAndView("login", Collections.singletonMap("signUpDTO", new SignupDTO()));
+   }*/
 
     @PostMapping("/login")
-    public ResponseEntity login(@ModelAttribute SignupDTO user) {
-        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+    public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
+        try {
+            Authentication authentication = daoAuthenticationProvider.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),
+                            loginDTO.getPassword())
+            );
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+            return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect email or password.", e);
+        }
     }
 
     @PostMapping("/token")

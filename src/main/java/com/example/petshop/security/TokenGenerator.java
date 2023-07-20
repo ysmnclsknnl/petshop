@@ -31,11 +31,11 @@ public class TokenGenerator {
         Instant now = Instant.now();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("myApp")
+                .issuer("petApp")
                 .issuedAt(now)
                 .expiresAt(now.plus(7, ChronoUnit.DAYS))
                 .subject(user.getEmail())
-                .claim("role", "CUSTOMER")
+                .claim("role", user.getRole())
                 .build();
 
         return accessTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
@@ -46,7 +46,7 @@ public class TokenGenerator {
         Instant now = Instant.now();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("myApp")
+                .issuer("petApp")
                 .issuedAt(now)
                 .expiresAt(now.plus(30, ChronoUnit.DAYS))
                 .subject(user.getEmail())
@@ -65,7 +65,7 @@ public class TokenGenerator {
 
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setEmail(user.getEmail());
-        tokenDTO.setRole(user.getRole());
+        tokenDTO.setRole(user.getRole().name());
         tokenDTO.setAccessToken(createAccessToken(authentication));
 
         String refreshToken;
