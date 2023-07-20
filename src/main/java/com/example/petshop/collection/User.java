@@ -1,5 +1,6 @@
 package com.example.petshop.collection;
 
+import com.example.petshop.User.Role;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
@@ -26,9 +27,9 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
-    private String role;
+    private Role role;
 
-    public User(String name, String email, String password, String role) {
+    public User(String name, String email, String password, Role role) {
     this.name = name;
     this.email = email;
     this.password = password;
