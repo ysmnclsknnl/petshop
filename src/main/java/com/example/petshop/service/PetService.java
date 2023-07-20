@@ -1,6 +1,7 @@
 package com.example.petshop.service;
 
 import com.example.petshop.collection.Pet;
+import com.example.petshop.dto.CreatePetDTO;
 import com.example.petshop.dto.PetDTO;
 import com.example.petshop.repository.PetRepository;
 import org.bson.types.Binary;
@@ -25,11 +26,11 @@ public class PetService {
     public List<PetDTO> allPets() {
 
         return petRepository.findAllByOrderByIdDesc().stream()
-                .map(PetDTO::new)
+                .map(PetDTO::from)
                 .toList();
     }
 
-    public String createPet(PetDTO petDTO, MultipartFile photo) {
+    /*public String createPet(PetDTO petDTO, MultipartFile photo) {
 
         try {
             List<String> errors = validatePet(petDTO, photo);
@@ -55,7 +56,17 @@ public class PetService {
         catch (IOException ex) {
             throw new RuntimeException("Something went wrong while loading image");
         }
-        }
+        }*/
+
+    public String createPet(CreatePetDTO petDTO) {
+            List<String> errors = validatePetDTO(petDTO);
+            if (errors.isEmpty()) {
+               Pet pet = Pet.from(petDTO);
+                return petRepository.save(pet).getId().toHexString();
+            }
+
+            throw new IllegalArgumentException(String.join(" ", errors));
+    }
 
 
     public String adoptPet(ObjectId petId) {
@@ -79,6 +90,17 @@ public class PetService {
         validateDescription(pet.getDescription()).ifPresent(errors::add);
         validateAge(pet.getAge()).ifPresent(errors::add);
         validatePhoto(photo).ifPresent(errors::add);
+
+        return errors;
+    }
+
+    private List<String> validatePetDTO(CreatePetDTO pet) {
+        List<String> errors = new ArrayList<>();
+
+        validateName(pet.getName()).ifPresent(errors::add);
+        validateDescription(pet.getDescription()).ifPresent(errors::add);
+        validateAge(pet.getAge()).ifPresent(errors::add);
+        validatePetDTOPhoto(pet.getPhoto()).ifPresent(errors::add);
 
         return errors;
     }
@@ -109,5 +131,11 @@ public class PetService {
         } catch(IOException ex) {
             return  Optional.of("Error occurred while processing the image");
         }
+    }
+
+    private Optional<String> validatePetDTOPhoto(String photo) {
+            return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
+                    Optional.empty() :
+                    Optional.of("A pet should have an image of maximum 100kb");
     }
 }
