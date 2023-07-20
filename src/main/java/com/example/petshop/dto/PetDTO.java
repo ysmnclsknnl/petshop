@@ -20,14 +20,13 @@ public class PetDTO {
     private String photo;
 
     public static PetDTO from(Pet pet) {
-        return new PetDTO(pet.getId().toHexString(),pet.getName(),pet.getDescription(), pet.getAge(), pet.getType(), pet.getAdopted(), Base64.getEncoder().encodeToString(pet.getPhoto().getData()));
-
-//        this.id = pet.getId().toHexString();
-//        this.name = pet.getName();
-//        this.description = pet.getDescription();
-//        this.age = pet.getAge();
-//        this.type = pet.getType();
-//        this.adopted = pet.getAdopted();
-//        this.photo = Base64.getEncoder().encodeToString(pet.getPhoto().getData());
+        return new PetDTO(pet.getId().toHexString(),
+                pet.getName(),
+                pet.getDescription(),
+                pet.getAge(),
+                pet.getType(),
+                pet.getAdopted(),
+                Base64.getEncoder().encodeToString(pet.getPhoto().getData())
+        );
     }
 }

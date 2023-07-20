@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -31,14 +30,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Slf4j
 public class WebSecurity {
-    @Autowired
+    final
     JwtToUserConverter jwtToUserConverter;
-    @Autowired
     KeyUtils keyUtils;
-    @Autowired
     PasswordEncoder passwordEncoder;
-    @Autowired
     UserDetailsManager userDetailsManager;
+
+    public WebSecurity(JwtToUserConverter jwtToUserConverter) {
+        this.jwtToUserConverter = jwtToUserConverter;
+    }
+
+    @Autowired
+    public WebSecurity(JwtToUserConverter jwtToUserConverter, KeyUtils keyUtils, PasswordEncoder passwordEncoder, UserDetailsManager userDetailsManager) {
+        this.jwtToUserConverter = jwtToUserConverter;
+        this.keyUtils = keyUtils;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsManager = userDetailsManager;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,20 +54,18 @@ public class WebSecurity {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/pets").hasRole("CUSTOMER")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/pets/add").hasRole("ADMIN")
                         .requestMatchers("/pets/{id}").hasRole("CUSTOMER")
-                        .requestMatchers("pets/add").hasRole("ADMIN")
+                        .requestMatchers("/pets").hasAnyRole("CUSTOMER","ADMIN")
                         .anyRequest().authenticated())
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .logout((logout) -> logout.permitAll())
+                .formLogin(login ->
+                        login.loginPage("/register"))
 
                 .oauth2ResourceServer((oauth2) ->
                         oauth2.jwt((jwt) -> jwt.jwtAuthenticationConverter(jwtToUserConverter))
                 )
+
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
