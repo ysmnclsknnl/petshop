@@ -1,5 +1,6 @@
 package com.example.petshop.security;
 
+import com.example.petshop.User.Role;
 import com.example.petshop.collection.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +20,7 @@ public class JwtToUserConverter implements Converter<Jwt, UsernamePasswordAuthen
         User user = new User();
         user.setEmail(jwt.getSubject());
         String role = jwt.getClaim("role");
-        user.setRole(role);
+        user.setRole(Role.valueOf(role));
         List<GrantedAuthority> authorities =
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
         return new UsernamePasswordAuthenticationToken(user, jwt, authorities);
