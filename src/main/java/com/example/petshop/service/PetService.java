@@ -4,7 +4,6 @@ import com.example.petshop.collection.Pet;
 import com.example.petshop.dto.CreatePetDTO;
 import com.example.petshop.dto.PetDTO;
 import com.example.petshop.repository.PetRepository;
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

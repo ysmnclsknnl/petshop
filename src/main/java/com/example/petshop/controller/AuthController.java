@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.server.resource.BearerTokenAuthentica
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 
