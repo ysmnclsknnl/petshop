@@ -13,7 +13,7 @@ spring:
       suffix: .html
   data:
     mongodb:
-      uri: mongodb+srv://yasemin:InterviewJune2023.@cluster0.gb963.mongodb.net/petshop-api-db?retryWrites=true&w=majority
+      uri: mongodb://root:example@mongo:27017/
       database: petshop-api-db
 logging:
   level:

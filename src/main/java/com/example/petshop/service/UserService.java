@@ -26,30 +26,6 @@ public class UserService implements UserDetailsManager {
     }
 
 
-//    public User getUser(String email, String password) {
-//       Optional<User> user =  userRepository.findByEmail(email);
-//       if(user != null) {
-//           if(password == user.getPassword()) {
-//               return user;
-//           }
-//           throw new IllegalArgumentException("Password is not correct!");
-//       }
-//
-//       throw  new IllegalArgumentException("No user is found with this email");
-//    }
-//
-//    public User createUser(User user) {
-//        String invalidInputs = getInvalidInputs(user);
-//        if (invalidInputs.isBlank()) {
-//            return userRepository.save(user);
-//        }
-//        throw new IllegalArgumentException(invalidInputs);
-//    }
-//
-//
-//
-//
-
     @Override
     public void createUser(UserDetails user) {
         if (!userExists(user.getUsername())) {

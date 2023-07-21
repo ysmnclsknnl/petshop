@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenDTO {
     private String email;
-    private String role;
+    private Role role;
     private String accessToken;
     private String refreshToken;
 }
