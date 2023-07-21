@@ -1,0 +1,38 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add Pet</title>
+</head>
+<body>
+
+<div class="container">
+
+    <h3>Add New Pet</h3>
+    <hr/>
+
+    <form th:action="@{/pets/add}" th:object="${pet}" method="POST" enctype="multipart/form-data">
+
+        <input type="text" th:field="*{name}" placeholder="Enter Name" pattern=".{3,}"
+               title="Name must be at least 3 characters long" required/>
+
+        <input type="text" th:field="*{description}" placeholder="Enter Description" pattern=".{15,}"
+               title="Description must be at least 15 characters long" required/>
+
+        <input type="number" th:field="*{age}" placeholder="Enter Age" min="0" title="Age must be at least 0" required/>
+        <label for="petType">Pet Type:</label>
+        <select id="petType" th:field="*{type}">
+            <option value="DOG">Dog</option>
+            <option value="CAT">Cat</option>
+        </select>
+
+<!--Image size validator in front-end is not working-->
+        <input type="file" th:name="petImage" accept="image/jpeg" maxlength="102400" title="Image must be max 100kb"
+               required/>
+
+        <button type="submit">Save</button>
+    </form>
+    <hr/>
+    <a th:href="@{/pets}">Back to pets</a>
+</div>
+</body>
+</html>

@@ -1,69 +1,65 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.PetWithStringImage;
-import com.example.petshop.collection.Pet;
+import com.example.petshop.dto.PetDTO;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import java.util.Collections;
 
 @RestController
-@RequestMapping("/api/pets")
+@RequestMapping("/pets")
 public class PetController {
 
-    @Autowired
-    private PetService petService;
+    final private PetService petService;
 
+    public PetController(PetService petService) {
+        this.petService = petService;
+    }
+    
     @GetMapping
-    public ResponseEntity<List<PetWithStringImage>> getAllPets() {
+    public ModelAndView getAllPets() {
         try {
-            return new ResponseEntity<>(petService.allPets(), HttpStatus.OK);
-        } catch (Exception error) {
-
-            String errorMessage = "An error occurred while retrieving pets.";
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+            return new ModelAndView("pets", Collections.singletonMap("pets", petService.allPets()));
+        } catch (Exception e) {
+            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
-    @PostMapping("/create")
-      public ResponseEntity<String> createPet(@RequestBody PetWithStringImage pet) {
+    @GetMapping("/add")
+    public ModelAndView addPetForm() {
+        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
+    }
+
+    @PostMapping("/add")
+    public ModelAndView createPet(@ModelAttribute PetDTO petDTO, @RequestParam("petImage") MultipartFile image) {
 
         try {
+            String petId = petService.createPet(petDTO, image);
 
-            String createdPetId = petService.createPet(pet).toHexString();
+            return new ModelAndView(
+                    "success",
+                    Collections.singletonMap("successMsg", "Pet is added successfully with id: " + petId )
+            );
+        } catch (Exception e) {
 
-            return new ResponseEntity<>(createdPetId, HttpStatus.CREATED);
-        } catch (Exception ex) {
-
-            if(ex instanceof IllegalArgumentException) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-            }
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Pet> adoptPet(@PathVariable ObjectId id) {
+    @PostMapping("/{id}")
+    public ModelAndView adoptPet(@PathVariable ObjectId id) {
         try {
-            return new ResponseEntity<>(petService.adoptPet(id), HttpStatus.OK);
-        } catch (Exception ex) {
-            if (ex instanceof IllegalArgumentException || ex  instanceof NoSuchElementException) {
+            String petName = petService.adoptPet(id);
 
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-            } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
-
-            }
+            return new ModelAndView(
+                    "success",
+                    Collections.singletonMap("successMsg", "You adopted " + petName + "!" )
+            );
+        } catch (Exception e) {
+            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 }
-
