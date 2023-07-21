@@ -65,7 +65,7 @@ public class TokenGenerator {
 
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setEmail(user.getEmail());
-        tokenDTO.setRole(user.getRole().name());
+        tokenDTO.setRole(user.getRole());
         tokenDTO.setAccessToken(createAccessToken(authentication));
 
         String refreshToken;

@@ -1,7 +1,6 @@
 package com.example.petshop.collection;
 
 import com.example.petshop.dto.CreatePetDTO;
-import com.example.petshop.dto.PetDTO;
 import com.example.petshop.dto.Type;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -39,14 +38,10 @@ public class Pet {
         this.adopted = adopted;
         this.photo = photo;
     }
+
     public static Pet from(CreatePetDTO pet) {
         byte[] binaryData = Base64.getDecoder().decode(pet.getPhoto());
-        return new Pet(pet.getName(), pet.getDescription() ,pet.getAge(), pet.getType(), false, new Binary(binaryData));
+        return new Pet(pet.getName(), pet.getDescription(), pet.getAge(), pet.getType(), false, new Binary(binaryData));
 
-//        this.name = pet.getName();
-//        this.description = pet.getDescription();
-//        this.age = pet.getAge();
-//        this.type = pet.getType();
-//        this.photo = new Binary(binaryData);
     }
 }
