@@ -27,12 +27,6 @@ public class PetController {
         }
     }
 
-  /*  @GetMapping("/add")
-    public ModelAndView addPetForm() {
-        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
-    }*/
-
-
     @PostMapping("/add")
     public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
 

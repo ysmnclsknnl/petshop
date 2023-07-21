@@ -1,6 +1,6 @@
 package com.example.petshop.security;
 
-import com.example.petshop.User.Role;
+import com.example.petshop.user.Role;
 import com.example.petshop.collection.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

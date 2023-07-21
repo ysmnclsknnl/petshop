@@ -1,13 +1,11 @@
 package com.example.petshop.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -118,14 +116,14 @@ public class KeyUtils {
 
     public RSAPublicKey getAccessTokenPublicKey() {
         return (RSAPublicKey) getAccessTokenKeyPair().getPublic();
-    };
+    }
     public RSAPrivateKey getAccessTokenPrivateKey() {
         return (RSAPrivateKey) getAccessTokenKeyPair().getPrivate();
-    };
+    }
     public RSAPublicKey getRefreshTokenPublicKey() {
         return (RSAPublicKey) getRefreshTokenKeyPair().getPublic();
-    };
+    }
     public RSAPrivateKey getRefreshTokenPrivateKey() {
         return (RSAPrivateKey) getRefreshTokenKeyPair().getPrivate();
-    };
+    }
 }

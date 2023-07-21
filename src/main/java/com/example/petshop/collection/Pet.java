@@ -29,7 +29,6 @@ public class Pet {
     private Boolean adopted;
     private Binary photo;
 
-
     public Pet(String name, String description, Integer age, Type type, Boolean adopted, Binary photo) {
         this.name = name;
         this.description = description;

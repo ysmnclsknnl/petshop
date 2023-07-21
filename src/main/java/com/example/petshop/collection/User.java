@@ -1,6 +1,6 @@
 package com.example.petshop.collection;
 
-import com.example.petshop.User.Role;
+import com.example.petshop.user.Role;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;

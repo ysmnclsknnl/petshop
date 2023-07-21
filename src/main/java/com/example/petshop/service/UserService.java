@@ -1,6 +1,6 @@
 package com.example.petshop.service;
 
-import com.example.petshop.User.Role;
+import com.example.petshop.user.Role;
 import com.example.petshop.collection.User;
 import com.example.petshop.dto.SignupDTO;
 import com.example.petshop.repository.UserRepository;
@@ -78,7 +78,7 @@ public class UserService implements UserDetailsManager {
             errors.append("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special symbol (@$!%*?&).");
         }
         Role role = user.getRole();
-        if (role == null || (role.name() != "CUSTOMER" && role.name() != "ADMIN")) {
+        if (role == null || (!role.name().equals("CUSTOMER") && !role.name().equals("ADMIN"))) {
             errors.append("No valid role is found. Role should be ADMIN or CUSTOMER");
         }
         return errors.toString();

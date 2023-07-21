@@ -6,9 +6,7 @@ import com.example.petshop.dto.PetDTO;
 import com.example.petshop.repository.PetRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,44 +27,15 @@ public class PetService {
                 .toList();
     }
 
-    /*public String createPet(PetDTO petDTO, MultipartFile photo) {
-
-        try {
-            List<String> errors = validatePet(petDTO, photo);
-            if (errors.isEmpty()) {
-                Binary petImage = new Binary(photo.getBytes());
-                Pet pet = new Pet(
-                        petDTO.getName(),
-                        petDTO.getDescription(),
-                        petDTO.getAge(),
-                        petDTO.getType(),
-                        false,
-                        petImage
-                );
-
-                return petRepository.save(pet).getId().toHexString();
-            }
-
-            throw new IllegalArgumentException(String.join(" ", errors));
-        }
-        catch(IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex.getMessage());
-            }
-        catch (IOException ex) {
-            throw new RuntimeException("Something went wrong while loading image");
-        }
-        }*/
-
     public String createPet(CreatePetDTO petDTO) {
             List<String> errors = validatePetDTO(petDTO);
             if (errors.isEmpty()) {
-               Pet pet = Pet.from(petDTO);
+                Pet pet = Pet.from(petDTO);
                 return petRepository.save(pet).getId().toHexString();
             }
 
             throw new IllegalArgumentException(String.join(" ", errors));
     }
-
 
     public String adoptPet(ObjectId petId) {
         Optional<Pet> optionalPet = petRepository.findById(petId);
@@ -80,17 +49,6 @@ public class PetService {
             return petRepository.save(pet).getName();
         }
 
-    }
-
-    private List<String> validatePet(PetDTO pet, MultipartFile photo) {
-        List<String> errors = new ArrayList<>();
-
-        validateName(pet.getName()).ifPresent(errors::add);
-        validateDescription(pet.getDescription()).ifPresent(errors::add);
-        validateAge(pet.getAge()).ifPresent(errors::add);
-        validatePhoto(photo).ifPresent(errors::add);
-
-        return errors;
     }
 
     private List<String> validatePetDTO(CreatePetDTO pet) {
@@ -120,16 +78,6 @@ public class PetService {
         return (age != null && age >= 0) ?
                 Optional.empty() :
                 Optional.of("Age must be at least 0.");
-    }
-
-    private Optional<String> validatePhoto(MultipartFile photo) {
-        try {
-            return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
-                    Optional.empty() :
-                    Optional.of("A pet should have an image of maximum 100kb");
-        } catch(IOException ex) {
-            return  Optional.of("Error occurred while processing the image");
-        }
     }
 
     private Optional<String> validatePetDTOPhoto(String photo) {

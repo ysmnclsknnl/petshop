@@ -93,7 +93,6 @@ public class AuthController {
     @PostMapping("/token")
     public ResponseEntity token(@RequestBody TokenDTO tokenDTO) {
         Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
-        Jwt jwt = (Jwt) authentication.getCredentials();
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
