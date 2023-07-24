@@ -1,0 +1,20 @@
+access-token:
+  private: ${ACCESS_TOKEN_PRIVATE_KEY_PATH}
+  public: ${ACCESS_TOKEN_PUBLIC_KEY_PATH}
+refresh-token:
+  private: ${REFRESH_TOKEN_PRIVATE_KEY_PATH}
+  public: ${REFRESH_TOKEN_PUBLIC_KEY_PATH}
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+      enabled: true
+      prefix: classpath:/templates/
+      suffix: .html
+  data:
+    mongodb:
+      uri: mongodb://root:example@mongo:27017/
+      database: petshop-api-db
+logging:
+  level:
+    org.springframework.security: DEBUG
