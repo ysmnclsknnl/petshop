@@ -49,7 +49,7 @@ public class PetController {
         }
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ModelAndView adoptPet(@PathVariable ObjectId id) {
         try {
             String petName = petService.adoptPet(id);
