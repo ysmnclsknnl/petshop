@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<div th:if="${param.error}">
+  Invalid username and password.
+</div>
+<div th:if="${param.logout}">
+  You have been logged out.
+</div>
+<form th:action="@{/auth/register}" th:object="${signUpDTO)}" method="post">
+
+  <div><label> User Name : <input type="text" th:field="*{userName}" placeholder="Enter Name" pattern=".{3,}" /></label></div>
+    <div><label> Email : <input type="email" th:field="*{email}"/> </label></div>
+  <div><label> Password: <input type="password" th:field="*{password}"/> </label></div>
+    <label for="roleId">Pet Type:</label>
+    <select id="roleId" th:field="*{role}">
+        <option value="ADMIN">Admin</option>
+        <option value="CUSTOMER">Customer</option>
+    </select>
+  <div><input type="submit" value="Sign In"/></div>
+</form>
+</body>
+</html>
