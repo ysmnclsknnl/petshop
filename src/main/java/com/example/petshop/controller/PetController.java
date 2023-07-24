@@ -1,10 +1,9 @@
 package com.example.petshop.controller;
 
-import com.example.petshop.dto.PetDTO;
+import com.example.petshop.dto.CreatePetDTO;
 import com.example.petshop.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
@@ -28,16 +27,11 @@ public class PetController {
         }
     }
 
-    @GetMapping("/add")
-    public ModelAndView addPetForm() {
-        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
-    }
-
     @PostMapping("/add")
-    public ModelAndView createPet(@ModelAttribute PetDTO petDTO, @RequestParam("petImage") MultipartFile image) {
+    public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
 
         try {
-            String petId = petService.createPet(petDTO, image);
+            String petId = petService.createPet(petDTO);
 
             return new ModelAndView(
                     "success",

@@ -1,14 +1,12 @@
 package com.example.petshop.service;
 
 import com.example.petshop.collection.Pet;
+import com.example.petshop.dto.CreatePetDTO;
 import com.example.petshop.dto.PetDTO;
 import com.example.petshop.repository.PetRepository;
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,38 +23,19 @@ public class PetService {
     public List<PetDTO> allPets() {
 
         return petRepository.findAllByOrderByIdDesc().stream()
-                .map(PetDTO::new)
+                .map(PetDTO::from)
                 .toList();
     }
 
-    public String createPet(PetDTO petDTO, MultipartFile photo) {
-
-        try {
-            List<String> errors = validatePet(petDTO, photo);
+    public String createPet(CreatePetDTO petDTO) {
+            List<String> errors = validatePetDTO(petDTO);
             if (errors.isEmpty()) {
-                Binary petImage = new Binary(photo.getBytes());
-                Pet pet = new Pet(
-                        petDTO.getName(),
-                        petDTO.getDescription(),
-                        petDTO.getAge(),
-                        petDTO.getType(),
-                        false,
-                        petImage
-                );
-
+                Pet pet = Pet.from(petDTO);
                 return petRepository.save(pet).getId().toHexString();
             }
 
             throw new IllegalArgumentException(String.join(" ", errors));
-        }
-        catch(IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex.getMessage());
-            }
-        catch (IOException ex) {
-            throw new RuntimeException("Something went wrong while loading image");
-        }
-        }
-
+    }
 
     public String adoptPet(ObjectId petId) {
         Optional<Pet> optionalPet = petRepository.findById(petId);
@@ -72,13 +51,13 @@ public class PetService {
 
     }
 
-    private List<String> validatePet(PetDTO pet, MultipartFile photo) {
+    private List<String> validatePetDTO(CreatePetDTO pet) {
         List<String> errors = new ArrayList<>();
 
         validateName(pet.getName()).ifPresent(errors::add);
         validateDescription(pet.getDescription()).ifPresent(errors::add);
         validateAge(pet.getAge()).ifPresent(errors::add);
-        validatePhoto(photo).ifPresent(errors::add);
+        validatePetDTOPhoto(pet.getPhoto()).ifPresent(errors::add);
 
         return errors;
     }
@@ -101,13 +80,9 @@ public class PetService {
                 Optional.of("Age must be at least 0.");
     }
 
-    private Optional<String> validatePhoto(MultipartFile photo) {
-        try {
+    private Optional<String> validatePetDTOPhoto(String photo) {
             return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
                     Optional.empty() :
                     Optional.of("A pet should have an image of maximum 100kb");
-        } catch(IOException ex) {
-            return  Optional.of("Error occurred while processing the image");
-        }
     }
 }
