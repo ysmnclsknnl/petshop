@@ -9,6 +9,7 @@ public class AppStartupRunner implements CommandLineRunner {
 
     // why a separate app runner?
     // How can I do it differently?
+    // nvm i understood the CommandLineRunner interface wrongly, another way to dot his is to add a eventlistener for the application startup event or to use postconstruct, for example in the petDataSeeder.
     public AppStartupRunner(PetDataSeeder petDataSeeder) {
         this.petDataSeeder = petDataSeeder;
     }

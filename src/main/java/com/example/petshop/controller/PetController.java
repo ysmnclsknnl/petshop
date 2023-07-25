@@ -12,7 +12,9 @@ import java.util.Collections;
 @RequestMapping("/pets")
 public class PetController {
 
-    final private PetService petService;
+    public static final String ERROR_VIEW_NAME = "error";
+    //use constants for strings/other values that are constant to provide context and avoid typo's in the future (enterprise level codestyle)
+    private final PetService petService;
 
     public PetController(PetService petService) {
         this.petService = petService;
@@ -23,11 +25,12 @@ public class PetController {
         try {
             return new ModelAndView("pets", Collections.singletonMap("pets", petService.allPets()));
         } catch (Exception e) {
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
     @PostMapping("/add")
+    //org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException is not handled nicely
     public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
 
         try {

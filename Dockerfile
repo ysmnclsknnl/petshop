@@ -1,3 +1,4 @@
+#using jdk to run is wastefull
 FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
 ARG JAR_FILE
