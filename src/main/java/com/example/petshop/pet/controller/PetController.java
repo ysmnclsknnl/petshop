@@ -1,7 +1,6 @@
-package com.example.petshop.controller;
+package com.example.petshop.pet.controller;
 
-import com.example.petshop.dto.CreatePetDTO;
-import com.example.petshop.service.PetService;
+import com.example.petshop.pet.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,7 +12,7 @@ import java.util.Collections;
 public class PetController {
 
     public static final String ERROR_VIEW_NAME = "error";
-    //use constants for strings/other values that are constant to provide context and avoid typo's in the future (enterprise level codestyle)
+
     private final PetService petService;
 
     public PetController(PetService petService) {
@@ -42,21 +41,19 @@ public class PetController {
             );
         } catch (Exception e) {
 
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
     @PatchMapping("/{id}")
     public ModelAndView adoptPet(@PathVariable ObjectId id) {
         try {
-            String petName = petService.adoptPet(id);
-
             return new ModelAndView(
                     "success",
-                    Collections.singletonMap("successMsg", "You adopted " + petName + "!" )
+                    Collections.singletonMap("successMsg", petService.adoptPet(id))
             );
         } catch (Exception e) {
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 }

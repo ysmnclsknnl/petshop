@@ -1,7 +1,6 @@
-package com.example.petshop.collection;
+package com.example.petshop.pet.data;
 
-import com.example.petshop.dto.CreatePetDTO;
-import com.example.petshop.dto.Type;
+import com.example.petshop.pet.controller.CreatePetDTO;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
@@ -23,7 +22,8 @@ import java.util.Base64;
 // -> config in config package, util in util or close to where it is used (if only used in one place)
 // a common mvc structure is to have a config package, a controller package, a service package and a data package but your free to change those around
 // just keep associated classes close together!
-public class Pet {
+public class
+Pet {
     @Id
     @JsonSerialize(using = ObjectIdSerializer.class) //is this serializer used?
     private ObjectId id;

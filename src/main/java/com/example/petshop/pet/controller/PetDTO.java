@@ -1,6 +1,7 @@
-package com.example.petshop.dto;
+package com.example.petshop.pet.controller;
 
-import com.example.petshop.collection.Pet;
+import com.example.petshop.pet.data.Pet;
+import com.example.petshop.pet.data.Type;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 

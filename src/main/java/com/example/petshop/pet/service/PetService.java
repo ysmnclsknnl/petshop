@@ -1,16 +1,16 @@
-package com.example.petshop.service;
+package com.example.petshop.pet.service;
 
-import com.example.petshop.collection.Pet;
-import com.example.petshop.dto.CreatePetDTO;
-import com.example.petshop.dto.PetDTO;
-import com.example.petshop.repository.PetRepository;
+import com.example.petshop.pet.controller.CreatePetDTO;
+import com.example.petshop.pet.controller.PetDTO;
+import com.example.petshop.pet.data.Pet;
+import com.example.petshop.pet.data.PetRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -28,38 +28,40 @@ public class PetService {
     }
 
     public String createPet(CreatePetDTO petDTO) {
-            List<String> errors = validatePetDTO(petDTO);
-            if (errors.isEmpty()) {
-                Pet pet = Pet.from(petDTO);
-                return petRepository.save(pet).getId().toHexString();
-            }
+        final String errors = validatePetDTO(petDTO);
+        if (errors.isBlank()) {
+            Pet pet = Pet.from(petDTO);
+            return petRepository.save(pet).getId().toHexString();
+        }
 
-            throw new IllegalArgumentException(String.join(" ", errors));
+        throw new IllegalArgumentException(String.join(" ", errors));
     }
 
     public String adoptPet(ObjectId petId) {
-        Optional<Pet> optionalPet = petRepository.findById(petId);
-        Pet pet = optionalPet.orElseThrow(() -> new NoSuchElementException("Pet not found with ID: " + petId));
+        Pet pet = petRepository
+                .findById(petId)
+                .orElseThrow(() -> new NoSuchElementException("Pet not found with ID: " + petId));
 
         if ((pet.getAdopted())) {
             throw new IllegalArgumentException("Pet with ID: " + petId + " is already adopted.");
         } else {
             pet.setAdopted(true);
 
-            return petRepository.save(pet).getName();
+            return "You adopted " + petRepository.save(pet).getName() + "!";
         }
 
     }
 
-    private List<String> validatePetDTO(CreatePetDTO pet) {
-        List<String> errors = new ArrayList<>();
-
-        validateName(pet.getName()).ifPresent(errors::add);
-        validateDescription(pet.getDescription()).ifPresent(errors::add);
-        validateAge(pet.getAge()).ifPresent(errors::add);
-        validatePetDTOPhoto(pet.getPhoto()).ifPresent(errors::add);
-
-        return errors;
+    private String validatePetDTO(CreatePetDTO pet) {
+        return List.of(
+                        validateName(pet.getName()),
+                        validateDescription(pet.getDescription()),
+                        validateAge(pet.getAge()),
+                        validatePetDTOPhoto(pet.getPhoto())
+        )
+                .stream().filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.joining(" "));
     }
 
     private Optional<String> validateName(String name) {
@@ -81,8 +83,8 @@ public class PetService {
     }
 
     private Optional<String> validatePetDTOPhoto(String photo) {
-            return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
-                    Optional.empty() :
-                    Optional.of("A pet should have an image of maximum 100kb");
+        return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
+                Optional.empty() :
+                Optional.of("A pet should have an image of maximum 100kb");
     }
 }

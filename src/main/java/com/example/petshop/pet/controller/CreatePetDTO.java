@@ -1,5 +1,6 @@
-package com.example.petshop.dto;
+package com.example.petshop.pet.controller;
 
+import com.example.petshop.pet.data.Type;
 import lombok.Getter;
 import lombok.Setter;
 

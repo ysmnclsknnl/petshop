@@ -1,4 +1,4 @@
-package com.example.petshop.dto;
+package com.example.petshop.user.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
