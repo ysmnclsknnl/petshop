@@ -1,4 +1,4 @@
-package com.example.petshop.user;
+package com.example.petshop.user.data;
 
 public enum Role {
     ADMIN,
