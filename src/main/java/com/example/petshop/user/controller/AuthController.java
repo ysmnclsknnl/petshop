@@ -1,11 +1,11 @@
 package com.example.petshop.user.controller;
 
-import com.example.petshop.user.service.UserService;
+import com.example.petshop.config.security.TokenGenerator;
 import com.example.petshop.user.controller.dto.LoginDTO;
 import com.example.petshop.user.controller.dto.SignupDTO;
 import com.example.petshop.user.controller.dto.TokenDTO;
-import com.example.petshop.config.security.TokenGenerator;
 import com.example.petshop.user.data.User;
+import com.example.petshop.user.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +69,6 @@ public class AuthController {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
             }
         }
-  /*  @GetMapping("/register")
-  public ModelAndView addLoginForm() {
-     return new ModelAndView("login", Collections.singletonMap("signUpDTO", new SignupDTO()));
-   }*/
 
     @PostMapping("/login")
     public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO) {
