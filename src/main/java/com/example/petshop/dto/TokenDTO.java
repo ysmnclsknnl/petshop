@@ -1,6 +1,6 @@
 package com.example.petshop.dto;
 
-import com.example.petshop.user.Role;
+import com.example.petshop.user.data.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

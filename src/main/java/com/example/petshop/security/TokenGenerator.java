@@ -1,7 +1,7 @@
 package com.example.petshop.security;
 
-import com.example.petshop.collection.User;
 import com.example.petshop.dto.TokenDTO;
+import com.example.petshop.user.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
