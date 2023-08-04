@@ -5,8 +5,8 @@ services:
   mongo:
     image: mongo:6.0.8
     restart: always
-#    ports:
-#      - 27017:27017
+    ports:
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -21,12 +21,12 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
-  petapp:
-    build:
-      context: .
-      args:
-        -  JAR_FILE=./build/libs/*.jar
-    restart: always
-    ports:
-      - 8080:8080
+#  petapp:
+#    build:
+#      context: .
+#      args:
+#        -  JAR_FILE=./build/libs/*.jar
+#    restart: always
+#    ports:
+#      - 8080:8080
 

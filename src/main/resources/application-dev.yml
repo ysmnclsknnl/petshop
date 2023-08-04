@@ -4,7 +4,7 @@ REFRESH_TOKEN_PRIVATE_KEY_PATH: "access-refresh-token-keys/refresh-token-private
 REFRESH_TOKEN_PUBLIC_KEY_PATH: "access-refresh-token-keys/refresh-token-public.key"
 MONGODB_USERNAME: "root"
 MONGODB_PASSWORD: "example"
-MONGODB_HOST: "mongo"
+MONGODB_HOST: "localhost"
 MONGODB_PORT: "27017"
 MONGODB_DB: "petshop-api-db"
 MONGODB_RS: "rs1"
