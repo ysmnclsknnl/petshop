@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface PetRepository extends MongoRepository<Pet, ObjectId> {
     List<Pet> findAllByOrderByIdDesc();
-
-
 }
