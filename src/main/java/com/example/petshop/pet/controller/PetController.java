@@ -33,7 +33,7 @@ public class PetController {
     public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
 
         try {
-            String petId = petService.createPet(petDTO);
+            ObjectId petId = petService.createPet(petDTO);
 
             return new ModelAndView(
                     "success",
