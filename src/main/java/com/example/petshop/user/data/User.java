@@ -19,7 +19,6 @@ import java.util.Collections;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//is the user core to your domain, or only because of auth?
 public class User implements UserDetails {
     @Id
     @JsonSerialize(using = ObjectIdSerializer.class)

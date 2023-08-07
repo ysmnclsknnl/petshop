@@ -27,14 +27,17 @@ public class PetService {
                 .toList();
     }
 
-    public String createPet(CreatePetDTO petDTO) {
+    public ObjectId createPet(CreatePetDTO petDTO) {
         final String errors = validatePetDTO(petDTO);
-        if (errors.isBlank()) {
-            Pet pet = Pet.from(petDTO);
-            return petRepository.save(pet).getId().toHexString();
+
+        if (!errors.isBlank()) {
+            throw new IllegalArgumentException(errors);
         }
 
-        throw new IllegalArgumentException(String.join(" ", errors));
+           final Pet pet = Pet.from(petDTO);
+
+            return petRepository.save(pet).getId();
+
     }
 
     public String adoptPet(ObjectId petId) {
@@ -44,15 +47,14 @@ public class PetService {
 
         if ((pet.getAdopted())) {
             throw new IllegalArgumentException("Pet with ID: " + petId + " is already adopted.");
-        } else {
+        }
             pet.setAdopted(true);
 
             return "You adopted " + petRepository.save(pet).getName() + "!";
         }
 
-    }
 
-    private String validatePetDTO(CreatePetDTO pet) {
+    public String validatePetDTO(CreatePetDTO pet) {
         return List.of(
                         validateName(pet.getName()),
                         validateDescription(pet.getDescription()),
@@ -64,25 +66,26 @@ public class PetService {
                 .collect(Collectors.joining(" "));
     }
 
-    private Optional<String> validateName(String name) {
+    protected static Optional<String> validateName(String name) {
         return (name != null && name.length() >= 3) ?
                 Optional.empty() :
                 Optional.of("Name must be at least 3 characters.");
     }
 
-    private Optional<String> validateDescription(String description) {
+    protected static Optional<String> validateDescription(String description) {
         return (description != null && description.length() >= 15) ?
                 Optional.empty() :
                 Optional.of("Description must be at least 15 characters.");
     }
 
-    private Optional<String> validateAge(Integer age) {
+    protected static Optional<String> validateAge(Integer age) {
+
         return (age != null && age >= 0) ?
                 Optional.empty() :
                 Optional.of("Age must be at least 0.");
     }
 
-    private Optional<String> validatePetDTOPhoto(String photo) {
+    protected static Optional<String> validatePetDTOPhoto(String photo) {
         return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
                 Optional.empty() :
                 Optional.of("A pet should have an image of maximum 100kb");

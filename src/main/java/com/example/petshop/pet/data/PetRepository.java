@@ -13,6 +13,4 @@ import java.util.Optional;
 
 public interface PetRepository extends MongoRepository<Pet, ObjectId> {
     List<Pet> findAllByOrderByIdDesc();
-
-
 }
