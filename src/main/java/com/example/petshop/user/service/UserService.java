@@ -1,6 +1,5 @@
 package com.example.petshop.user.service;
 
-import com.example.petshop.user.controller.AuthController;
 import com.example.petshop.user.controller.dto.SignupDTO;
 import com.example.petshop.user.data.Role;
 import com.example.petshop.user.data.User;
@@ -47,10 +46,10 @@ public class UserService implements UserDetailsManager {
         if (email == null || !email.matches("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
             errors.append("Email address should consist of numbers, letters and '.', '-', '_' symbols");
         }
-//        String password = user.getPassword();
-//        if (password == null || password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")){
-//            errors.append("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special symbol (@$!%*?&).");
-//        }
+        String password = user.getPassword();
+        if (password == null || !password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")){
+            errors.append("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special symbol (@$!%*?&).");
+        }
         Role role = user.getRole();
         if (role == null || (!role.name().equals("CUSTOMER") && !role.name().equals("ADMIN"))) {
             errors.append("No valid role is found. Role should be ADMIN or CUSTOMER");
