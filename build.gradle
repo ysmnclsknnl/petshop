@@ -29,6 +29,11 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("org.springframework.security:spring-security-test:6.1.2")
+    final String testContainers = "1.18.1"
+    testImplementation("org.testcontainers:testcontainers:$testContainers")
+    testImplementation("org.testcontainers:mongodb:$testContainers")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainers")
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation 'org.thymeleaf:thymeleaf:3.1.1.RELEASE'
     //  Temporary explicit version to fix Thymeleaf bug
