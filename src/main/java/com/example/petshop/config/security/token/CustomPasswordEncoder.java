@@ -1,4 +1,4 @@
-package com.example.petshop.config.security;
+package com.example.petshop.config.security.token;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
