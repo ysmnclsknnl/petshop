@@ -1,13 +1,15 @@
 package com.example.petshop;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @Configuration
 public class MongoDBTestContainerConfig {
     @Container
-    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.3");
+    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.3")
+            .withExposedPorts(27017);
 
     static {
         mongoDBContainer.start();
