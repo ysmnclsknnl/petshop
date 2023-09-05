@@ -3,7 +3,6 @@ package com.example.petshop.user.controller;
 import com.example.petshop.user.controller.dto.LoginDTO;
 import com.example.petshop.user.controller.dto.SignupDTO;
 import com.example.petshop.user.controller.dto.TokenDTO;
-import com.example.petshop.user.service.CustomUserDetailsManager;
 import com.example.petshop.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

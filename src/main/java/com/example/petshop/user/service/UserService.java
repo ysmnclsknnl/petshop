@@ -5,7 +5,6 @@ import com.example.petshop.user.controller.dto.LoginDTO;
 import com.example.petshop.user.controller.dto.SignupDTO;
 import com.example.petshop.user.controller.dto.TokenDTO;
 import com.example.petshop.user.data.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,13 +16,13 @@ import java.util.Collections;
 
 @Service
 public class UserService {
-    final
+    private final
     CustomUserDetailsManager customUserDetailsManager;
 
-    final
+    private final
     TokenGenerator tokenGenerator;
 
-    final
+    private final
     JwtAuthenticationProvider refreshTokenAuthProvider;
 
     public UserService(CustomUserDetailsManager customUserDetailsManager, TokenGenerator tokenGenerator, JwtAuthenticationProvider refreshTokenAuthProvider) {
@@ -44,7 +43,7 @@ public class UserService {
                 signupDTO.getPassword(),
                 signupDTO.getRole()
         );
-        customUserDetailsManager.createUser(user);
+        getCustomUserDetailsManager().createUser(user);
 
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 user,
@@ -53,7 +52,7 @@ public class UserService {
         );
 
 
-        return tokenGenerator.createToken(authentication);
+        return getTokenGenerator().createToken(authentication);
     }
 
     public TokenDTO loginUser(LoginDTO loginDTO) {
@@ -62,14 +61,14 @@ public class UserService {
                 loginDTO.getPassword()
         );
 
-        return tokenGenerator.createToken(authentication);
+        return getTokenGenerator().createToken(authentication);
     }
 
     public TokenDTO getToken(TokenDTO tokenDTO) {
-        Authentication authentication = refreshTokenAuthProvider
+        Authentication authentication = getRefreshTokenAuthProvider()
                 .authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
 
-        return tokenGenerator.createToken(authentication);
+        return getTokenGenerator().createToken(authentication);
     }
 
     public static String validateUser(SignupDTO user) {
@@ -96,5 +95,17 @@ public class UserService {
         }
 
         return errors.toString();
+    }
+
+    public CustomUserDetailsManager getCustomUserDetailsManager() {
+        return customUserDetailsManager;
+    }
+
+    public TokenGenerator getTokenGenerator() {
+        return tokenGenerator;
+    }
+
+    public JwtAuthenticationProvider getRefreshTokenAuthProvider() {
+        return refreshTokenAuthProvider;
     }
 }
