@@ -1,7 +1,5 @@
 package com.example.petshop.pet.service;
 
-import com.example.petshop.pet.controller.CreatePetDTO;
-import com.example.petshop.pet.controller.PetDTO;
 import com.example.petshop.pet.data.Pet;
 import com.example.petshop.pet.data.PetRepository;
 import org.bson.types.ObjectId;
@@ -9,8 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class PetService {
@@ -20,21 +17,15 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public List<PetDTO> allPets() {
+    public List<Pet> allPets() {
 
-        return petRepository.findAllByOrderByIdDesc().stream()
-                .map(PetDTO::from)
-                .toList();
+        return petRepository.findAllByOrderByIdDesc();
     }
 
-    public ObjectId createPet(CreatePetDTO petDTO) {
-        final String errors = validatePetDTO(petDTO);
-
-        if (!errors.isBlank()) {
-            throw new IllegalArgumentException(errors);
-        }
-
-           final Pet pet = Pet.from(petDTO);
+    public ObjectId createPet(Pet pet) {
+       pet.getValidationExceptions().ifPresent(ex -> {
+            throw ex;
+        });
 
             return petRepository.save(pet).getId();
 
@@ -54,40 +45,5 @@ public class PetService {
         }
 
 
-    public String validatePetDTO(CreatePetDTO pet) {
-        return List.of(
-                        validateName(pet.getName()),
-                        validateDescription(pet.getDescription()),
-                        validateAge(pet.getAge()),
-                        validatePetDTOPhoto(pet.getPhoto())
-        )
-                .stream().filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.joining(" "));
-    }
 
-    protected static Optional<String> validateName(String name) {
-        return (name != null && name.length() >= 3) ?
-                Optional.empty() :
-                Optional.of("Name must be at least 3 characters.");
-    }
-
-    protected static Optional<String> validateDescription(String description) {
-        return (description != null && description.length() >= 15) ?
-                Optional.empty() :
-                Optional.of("Description must be at least 15 characters.");
-    }
-
-    protected static Optional<String> validateAge(Integer age) {
-
-        return (age != null && age >= 0) ?
-                Optional.empty() :
-                Optional.of("Age must be at least 0.");
-    }
-
-    protected static Optional<String> validatePetDTOPhoto(String photo) {
-        return (!photo.isEmpty() && photo.getBytes().length <= 100 * 1024) ?
-                Optional.empty() :
-                Optional.of("A pet should have an image of maximum 100kb");
-    }
 }

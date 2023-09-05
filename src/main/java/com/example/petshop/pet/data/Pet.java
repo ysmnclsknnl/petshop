@@ -1,52 +1,54 @@
 package com.example.petshop.pet.data;
 
-import com.example.petshop.pet.controller.CreatePetDTO;
 import com.example.petshop.serializer.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.bson.types.Binary;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "pet")
 public class Pet {
     @Id
-    @JsonSerialize(using = ObjectIdSerializer.class) //is this serializer used?
-     ObjectId id ;
-    private String name;
-    private String description;
-    private Integer age;
-    private Type type;
+    @JsonSerialize(using = ObjectIdSerializer.class)
+    private final ObjectId id;
+    private final String name;
+    private final String description;
+    private final Integer age;
+    private final Type type;
     private Boolean adopted;
-    private Binary photo;
+    private final String photoLink;
 
-    public Pet(String name, String description, Integer age, Type type, Boolean adopted, Binary photo) {
+    public Pet(ObjectId id , String name, String description, Integer age, Type type, Boolean adopted, String photoLink) {
+        this.id =  id == null ? new ObjectId() : id;
         this.name = name;
         this.description = description;
         this.age = age;
         this.type = type;
-        this.adopted = adopted;
-        this.photo = photo;
+        this.adopted = adopted == null ? false : adopted;
+        this.photoLink = photoLink;
     }
 
-    public static Pet from(CreatePetDTO pet) {
-        byte[] binaryData = Base64.getDecoder().decode(pet.getPhoto());
-        return new Pet(
-                pet.getName(),
-                pet.getDescription(),
-                pet.getAge(),
-                pet.getType(),
-                false,
-                new Binary(binaryData)
-        );
 
+
+    public Optional<IllegalArgumentException> getValidationExceptions() {
+        List<String> errors = Stream.of(
+                        name != null && name.length() >= 3 ? null : "Name must be at least 3 characters.",
+                        description != null && description.length() >= 15 ? null : "Description must be at least 15 characters.",
+                        age != null && age >= 0 ? null : "Age must be at least 0.",
+                        photoLink != null  ? null : "Photo must have an image.",
+                        photoLink!= null &&  photoLink.matches("^(http|https)://[^ \"]+$")? null : "Image link should should start with http or https and not contain spaces."
+                ).filter(Objects::nonNull)
+                .toList();
+
+        return errors.isEmpty() ?
+                Optional.empty() :
+                Optional.of(new IllegalArgumentException(String.join(" ", errors)));
     }
 }
