@@ -1,4 +1,4 @@
-package com.example.petshop.dto;
+package com.example.petshop.pet.data;
 //move to appropriate package
 
 public enum Type {

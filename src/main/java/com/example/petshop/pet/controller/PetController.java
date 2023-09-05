@@ -1,10 +1,8 @@
-package com.example.petshop.controller;
+package com.example.petshop.pet.controller;
 
-import com.example.petshop.dto.PetDTO;
-import com.example.petshop.service.PetService;
+import com.example.petshop.pet.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
@@ -13,7 +11,9 @@ import java.util.Collections;
 @RequestMapping("/pets")
 public class PetController {
 
-    final private PetService petService;
+    public static final String ERROR_VIEW_NAME = "error";
+
+    private final PetService petService;
 
     public PetController(PetService petService) {
         this.petService = petService;
@@ -24,20 +24,16 @@ public class PetController {
         try {
             return new ModelAndView("pets", Collections.singletonMap("pets", petService.allPets()));
         } catch (Exception e) {
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
-    @GetMapping("/add")
-    public ModelAndView addPetForm() {
-        return new ModelAndView("add-pet-form", Collections.singletonMap("pet", new PetDTO()));
-    }
-
     @PostMapping("/add")
-    public ModelAndView createPet(@ModelAttribute PetDTO petDTO, @RequestParam("petImage") MultipartFile image) {
+    //org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException is not handled nicely
+    public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
 
         try {
-            String petId = petService.createPet(petDTO, image);
+            ObjectId petId = petService.createPet(petDTO);
 
             return new ModelAndView(
                     "success",
@@ -45,21 +41,19 @@ public class PetController {
             );
         } catch (Exception e) {
 
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ModelAndView adoptPet(@PathVariable ObjectId id) {
         try {
-            String petName = petService.adoptPet(id);
-
             return new ModelAndView(
                     "success",
-                    Collections.singletonMap("successMsg", "You adopted " + petName + "!" )
+                    Collections.singletonMap("successMsg", petService.adoptPet(id))
             );
         } catch (Exception e) {
-            return new ModelAndView("error", Collections.singletonMap("errorMsg", e.getMessage()));
+            return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 }
