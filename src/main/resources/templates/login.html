@@ -11,7 +11,7 @@
 <div th:if="${param.logout}">
   You have been logged out.
 </div>
-<form th:action="@{/auth/register}" th:object="${signUpDTO)}" method="post">
+<form th:action="@{/auth/register}" th:object="${signUpDTO}" method="post">
 
   <div><label> User Name : <input type="text" th:field="*{userName}" placeholder="Enter Name" pattern=".{3,}" /></label></div>
     <div><label> Email : <input type="email" th:field="*{email}"/> </label></div>
