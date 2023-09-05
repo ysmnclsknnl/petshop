@@ -42,7 +42,7 @@ public class Pet {
                         name != null && name.length() >= 3 ? null : "Name must be at least 3 characters.",
                         description != null && description.length() >= 15 ? null : "Description must be at least 15 characters.",
                         age != null && age >= 0 ? null : "Age must be at least 0.",
-                        photoLink != null  ? null : "Photo must have an image.",
+                        photoLink != null  ? null : "Pet must have an image link.",
                         photoLink!= null &&  photoLink.matches("^(http|https)://[^ \"]+$")? null : "Image link should should start with http or https and not contain spaces."
                 ).filter(Objects::nonNull)
                 .toList();
