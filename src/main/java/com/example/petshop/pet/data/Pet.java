@@ -12,7 +12,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Data
+@Getter
+@Setter
 @Document(collection = "pet")
 public class Pet {
     @Id
@@ -34,7 +35,6 @@ public class Pet {
         this.adopted = adopted == null ? false : adopted;
         this.photoLink = photoLink;
     }
-
 
 
     public Optional<IllegalArgumentException> getValidationExceptions() {
