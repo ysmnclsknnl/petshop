@@ -1,5 +1,6 @@
 package com.example.petshop.pet.controller;
 
+import com.example.petshop.pet.data.Pet;
 import com.example.petshop.pet.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
@@ -23,23 +24,22 @@ public class PetController {
     public ModelAndView getAllPets() {
         try {
             return new ModelAndView("pets", Collections.singletonMap("pets", petService.allPets()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
 
     @PostMapping("/add")
-    //org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException is not handled nicely
-    public ModelAndView createPet(@RequestBody CreatePetDTO petDTO ) {
+    public ModelAndView createPet(@RequestBody Pet pet ) {
 
         try {
-            ObjectId petId = petService.createPet(petDTO);
+            ObjectId petId = petService.createPet(pet);
 
             return new ModelAndView(
                     "success",
                     Collections.singletonMap("successMsg", "Pet is added successfully with id: " + petId )
             );
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
 
             return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
@@ -52,7 +52,7 @@ public class PetController {
                     "success",
                     Collections.singletonMap("successMsg", petService.adoptPet(id))
             );
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }

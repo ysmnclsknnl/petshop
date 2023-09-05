@@ -1,4 +1,4 @@
-package com.example.petshop.config.security;
+package com.example.petshop.config.security.token;
 
 import com.example.petshop.user.data.Role;
 import com.example.petshop.user.data.User;
