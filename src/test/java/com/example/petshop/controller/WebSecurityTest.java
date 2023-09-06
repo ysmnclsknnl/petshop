@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PetController.class)
@@ -35,9 +34,6 @@ public class WebSecurityTest {
 
     @MockBean
     private PetService petService;
-
-    @MockBean
-    private UserDetailsService userDetailsService;
 
     private Pet validDog = new Pet(
             new ObjectId(),
@@ -81,7 +77,6 @@ public class WebSecurityTest {
                 .andExpect(status().isOk());
     }
 
-
     @WithMockUser(roles = "CUSTOMER")
     @Test
     public void whenCustomer_CreatePet_thenForbidden() throws Exception {
@@ -93,6 +88,34 @@ public class WebSecurityTest {
                 .andExpect(status().isForbidden());
     }
 
+    @WithAnonymousUser
+    @Test
+    public void whenAnonymousUser_CreatePet_thenUnauthorized() throws Exception {
+
+        when(petService.createPet(validDog)).thenReturn(validDog.getId());
+        mockMvc.perform(post("/pets/add")
+                .contentType("application/json")
+                .content(toJson(validDog)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(roles = "ADMIN")
+    @Test
+    public void whenAdmin_AdoptPet_thenForbidden() throws Exception {
+
+        when(petService.adoptPet(validDog.getId())).thenReturn("You adopted " + validDog.getName() + "!");
+        mockMvc.perform(patch("/pets/" + validDog.getId()))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void whenAnonymousUser_AdoptPet_thenUnauthorized() throws Exception {
+
+        when(petService.adoptPet(validDog.getId())).thenReturn("You adopted " + validDog.getName() + "!");
+        mockMvc.perform(patch("/pets/" + validDog.getId()))
+                .andExpect(status().isUnauthorized());
+    }
 
     private String toJson(Pet pet) {
         return String.format("{\n" +
