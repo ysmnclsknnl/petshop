@@ -35,7 +35,7 @@ public class PetDataSeeder implements CommandLineRunner {
                 "https://p0.pxfuel.com/preview/385/15/639/cute-mammal-cat-portrait.jpg"
         );
 
-        ObjectId petId = new ObjectId() ;
+        ObjectId id = new ObjectId();
         String petName = faker.cat().name();
         String description = faker.cat().breed();
         Integer age = faker.number().numberBetween(0, 10);
@@ -44,7 +44,7 @@ public class PetDataSeeder implements CommandLineRunner {
         int randomIndex = faker.number().numberBetween(0, imageUrls.size());
         String photoLink = imageUrls.get(randomIndex);
 
-        return new Pet(petId, petName, description, age, type, adopted, photoLink);
+        return new Pet(id, petName, description, age, type, adopted, photoLink);
     }
 
     @Override

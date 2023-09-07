@@ -1,8 +1,7 @@
-package com.example.petshop.controller;
+package com.example.petshop.pet;
 
 
 import com.example.petshop.MongoDBTestContainerConfig;
-import com.example.petshop.pet.PetRepository;
 import com.example.petshop.pet.data.Pet;
 import com.example.petshop.pet.data.Type;
 import com.example.petshop.security.SecurityOff;
@@ -25,21 +24,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @ContextConfiguration(classes = MongoDBTestContainerConfig.class)
 @ImportAutoConfiguration(SecurityOff.class)
-public class ControllerIntegrationTest
+public class PetControllerTest
 {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private PetRepository petRepository;
+    private PetRepository repository;
 
     @BeforeEach
     public void setup() {
-        petRepository.deleteAll();
+    repository.deleteAll();
     }
 
     private final Pet validDog = new Pet(
-            new ObjectId(),
             "Dog",
             "Cute dog. Likes to play fetch",
             1,
@@ -49,7 +47,6 @@ public class ControllerIntegrationTest
     );
 
     private final Pet validCat = new Pet(
-            new ObjectId(),
             "Cat",
             "Cute cat. Likes to play with string",
             2,
@@ -60,8 +57,8 @@ public class ControllerIntegrationTest
 
     @Test
     public void whenGetAllPets_thenSuccess() throws Exception {
-        petRepository.save(validDog);
-        petRepository.save(validCat);
+        repository.save(validDog);
+        repository.save(validCat);
 
         mockMvc.perform(get("/pets"))
                 .andExpect(status().isOk());

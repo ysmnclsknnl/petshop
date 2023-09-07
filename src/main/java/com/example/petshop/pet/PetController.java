@@ -1,5 +1,6 @@
 package com.example.petshop.pet;
 
+import com.example.petshop.pet.data.CreatePetDTO;
 import com.example.petshop.pet.data.Pet;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class PetController {
     }
 
     @PostMapping("/add")
-    public ModelAndView createPet(@RequestBody Pet pet) {
+    public ModelAndView createPet(@RequestBody CreatePetDTO pet) {
 
         try {
             ObjectId petId = petService.createPet(pet);
@@ -55,4 +56,5 @@ public class PetController {
             return new ModelAndView(ERROR_VIEW_NAME, Collections.singletonMap("errorMsg", e.getMessage()));
         }
     }
+
 }
