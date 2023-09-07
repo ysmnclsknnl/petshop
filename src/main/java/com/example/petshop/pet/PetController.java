@@ -1,7 +1,6 @@
-package com.example.petshop.pet.controller;
+package com.example.petshop.pet;
 
 import com.example.petshop.pet.data.Pet;
-import com.example.petshop.pet.service.PetService;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,7 +18,7 @@ public class PetController {
     public PetController(PetService petService) {
         this.petService = petService;
     }
-    
+
     @GetMapping
     public ModelAndView getAllPets() {
         try {
@@ -30,14 +29,14 @@ public class PetController {
     }
 
     @PostMapping("/add")
-    public ModelAndView createPet(@RequestBody Pet pet ) {
+    public ModelAndView createPet(@RequestBody Pet pet) {
 
         try {
             ObjectId petId = petService.createPet(pet);
 
             return new ModelAndView(
                     "success",
-                    Collections.singletonMap("successMsg", "Pet is added successfully with id: " + petId )
+                    Collections.singletonMap("successMsg", "Pet is added successfully with id: " + petId)
             );
         } catch (RuntimeException e) {
 

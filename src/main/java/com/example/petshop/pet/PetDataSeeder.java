@@ -1,5 +1,7 @@
-package com.example.petshop.pet.data;
+package com.example.petshop.pet;
 
+import com.example.petshop.pet.data.Pet;
+import com.example.petshop.pet.data.Type;
 import net.datafaker.Faker;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ public class PetDataSeeder implements CommandLineRunner {
                 "https://p1.pxfuel.com/preview/159/551/746/cat-baby-baby-cat-kitten-cat-cute-sweet.jpg",
                 "https://p0.pxfuel.com/preview/385/15/639/cute-mammal-cat-portrait.jpg"
         );
+
         ObjectId petId = new ObjectId() ;
         String petName = faker.cat().name();
         String description = faker.cat().breed();

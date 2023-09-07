@@ -1,7 +1,6 @@
-package com.example.petshop.user.service;
+package com.example.petshop.user;
 
 import com.example.petshop.user.data.User;
-import com.example.petshop.user.data.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,10 +11,10 @@ import java.text.MessageFormat;
 
 @Component
 public class CustomUserDetailsManager implements UserDetailsManager {
-    final
+    private final
     UserRepository userRepository;
 
-    final
+    private final
     PasswordEncoder passwordEncoder;
 
 
@@ -27,8 +26,8 @@ public class CustomUserDetailsManager implements UserDetailsManager {
     @Override
     public void createUser(UserDetails user) {
         if (!userExists(user.getUsername())) {
-            ((User) user).setPassword(passwordEncoder.encode(user.getPassword()));
-           userRepository.save((User) user);
+            ((User) user).setPassword(getPasswordEncoder().encode(user.getPassword()));
+           getUserRepository().save((User) user);
         } else {
             throw new IllegalArgumentException("User exists with email" + user.getUsername());
         }
@@ -42,17 +41,17 @@ public class CustomUserDetailsManager implements UserDetailsManager {
 
     @Override
     public void deleteUser(String username) {
-        userRepository.deleteByEmail(username);
+        getUserRepository().deleteByEmail(username);
     }
 
     @Override
     public boolean userExists(String email) {
-        return userRepository.existsByEmail(email);
+        return getUserRepository().existsByEmail(email);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        return getUserRepository().findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         MessageFormat.format("user {0} not found", email)
                 ));
@@ -62,4 +61,12 @@ public class CustomUserDetailsManager implements UserDetailsManager {
     public void changePassword(String oldPassword, String newPassword) {
 
     }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
     }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+}

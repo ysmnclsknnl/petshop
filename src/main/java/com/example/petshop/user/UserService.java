@@ -1,6 +1,7 @@
-package com.example.petshop.user.service;
+package com.example.petshop.user;
 
 import com.example.petshop.config.security.token.TokenGenerator;
+import com.example.petshop.user.CustomUserDetailsManager;
 import com.example.petshop.user.controller.dto.LoginDTO;
 import com.example.petshop.user.controller.dto.SignupDTO;
 import com.example.petshop.user.controller.dto.TokenDTO;

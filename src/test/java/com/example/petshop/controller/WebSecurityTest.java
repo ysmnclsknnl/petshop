@@ -1,17 +1,16 @@
 package com.example.petshop.controller;
 
 import com.example.petshop.config.security.WebSecurity;
-import com.example.petshop.pet.controller.PetController;
+import com.example.petshop.pet.PetController;
 import com.example.petshop.pet.data.Pet;
 import com.example.petshop.pet.data.Type;
-import com.example.petshop.pet.service.PetService;
+import com.example.petshop.pet.PetService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;

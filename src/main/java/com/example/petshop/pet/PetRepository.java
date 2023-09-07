@@ -1,5 +1,6 @@
-package com.example.petshop.pet.data;
+package com.example.petshop.pet;
 
+import com.example.petshop.pet.data.Pet;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

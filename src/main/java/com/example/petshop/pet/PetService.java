@@ -1,7 +1,7 @@
-package com.example.petshop.pet.service;
+package com.example.petshop.pet;
 
 import com.example.petshop.pet.data.Pet;
-import com.example.petshop.pet.data.PetRepository;
+import com.example.petshop.pet.PetRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
