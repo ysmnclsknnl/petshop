@@ -13,8 +13,8 @@ spring:
       suffix: .html
   data:
     mongodb:
-      uri: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/
-      database: ${MONGODB_DB}
+      uri: mongodb://root:example@localhost:27017/
+      database: petshop-api-db
 logging:
   level:
     org.springframework.security: DEBUG
