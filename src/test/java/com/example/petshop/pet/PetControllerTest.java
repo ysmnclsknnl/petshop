@@ -6,23 +6,22 @@ import com.example.petshop.pet.data.Pet;
 import com.example.petshop.pet.data.Type;
 import com.example.petshop.security.SecurityOff;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
-@ContextConfiguration(classes = MongoDBTestContainerConfig.class)
 @ImportAutoConfiguration(SecurityOff.class)
 public class PetControllerTest
 {
@@ -34,7 +33,7 @@ public class PetControllerTest
 
     @BeforeEach
     public void setup() {
-    repository.deleteAll();
+        repository.deleteAll();
     }
 
     private final Pet validDog = new Pet(
@@ -42,7 +41,6 @@ public class PetControllerTest
             "Cute dog. Likes to play fetch",
             1,
             Type.DOG,
-            false,
             "https://www.dog.com"
     );
 
@@ -51,7 +49,6 @@ public class PetControllerTest
             "Cute cat. Likes to play with string",
             2,
             Type.CAT,
-            false,
             "https://www.cat.com"
     );
 
@@ -64,4 +61,25 @@ public class PetControllerTest
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void whenCreatePet_WithValidData_thenSuccess() throws Exception {
+        mockMvc.perform(post("/pets/add")
+                .contentType("application/json")
+                .content("{\n" +
+                        "    \"name\": \"Dog\",\n" +
+                        "    \"description\": \"Cute dog. Likes to play fetch\",\n" +
+                        "    \"age\": 1,\n" +
+                        "    \"type\": \"DOG\",\n" +
+                        "    \"photoLink\": \"https://www.dog.com\"\n" +
+                        "}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenAdoptPet_WithValidId_thenSuccess() throws Exception {
+        ObjectId id = repository.save(validDog).getId();
+
+        mockMvc.perform(patch("/pets/" + id))
+                .andExpect(status().isOk());
+    }
 }
